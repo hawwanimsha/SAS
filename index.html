@@ -50,7 +50,7 @@ label.field-label{font-size:12px;color:#64748b;font-weight:500;display:block;mar
 .alert-success{background:#f0fdf4;border:1px solid #a7f3d0;color:#065f46}
 .alert-warn{background:#fef3c7;border:1px solid #fcd34d;color:#92400e}
 .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700}
-.badge-FA{background:#d1fae5;color:#065f46}.badge-MA{background:#dbeafe;color:#1e3a8a}.badge-A{background:#fef3c7;color:#92400e}.badge-B{background:#fee2e2;color:#7f1d1d}
+.badge-FA{background:#d1fae5;color:#065f46}.badge-MA{background:#dbeafe;color:#1e3a8a}.badge-A{background:#fef3c7;color:#92400e}
 .tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid #e2e8f0}
 table{width:100%;border-collapse:collapse;font-size:12px}
 th{padding:9px 12px;text-align:left;font-weight:600;color:#475569;background:#f8fafc;border-bottom:1px solid #e2e8f0;white-space:nowrap}
@@ -294,7 +294,7 @@ const SYLLABUS_FLAT = {"Mathematics":{"Grade 1":["MPS101|MPS101a|Mathematical Pr
 // STATE
 var STATE = { grade:"", subject:"", testAnalysis:null, students:[], results:null, questions:[] };
 var charts = {};
-var LEVEL_COLORS = { FA:"#059669", MA:"#2563eb", A:"#d97706", B:"#dc2626" };
+var LEVEL_COLORS = { FA:"#059669", MA:"#2563eb", A:"#d97706" };
 var COG_LEVELS = ["Knowledge","Understanding","Application","Analysis","Evaluation","Creation"];
 
 // SYLLABUS
@@ -306,10 +306,9 @@ function getOutcomesForGrade(subj, grade) {
   return map;
 }
 function getLevel(pct) {
-  if (pct>=85) return {code:"FA",label:"Fully Achieved",color:"#059669",bg:"#d1fae5",text:"#065f46"};
-  if (pct>=65) return {code:"MA",label:"Mostly Achieved",color:"#2563eb",bg:"#dbeafe",text:"#1e3a8a"};
-  if (pct>=40) return {code:"A",label:"Achieving",color:"#d97706",bg:"#fef3c7",text:"#92400e"};
-  return {code:"B",label:"Beginning",color:"#dc2626",bg:"#fee2e2",text:"#7f1d1d"};
+  if (pct>=80) return {code:"FA",label:"Fully Achieved",color:"#059669",bg:"#d1fae5",text:"#065f46"};
+  if (pct>=50) return {code:"MA",label:"Mostly Achieved",color:"#2563eb",bg:"#dbeafe",text:"#1e3a8a"};
+  return {code:"A",label:"Achieving",color:"#d97706",bg:"#fef3c7",text:"#92400e"};
 }
 function esc(s){if(s==null)return '';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function showErr(el,msg){el.textContent=msg;el.style.display='block';}
@@ -396,8 +395,8 @@ function initTestPaper(){
   if(ok) document.getElementById('tp-subtitle').textContent='Map each question to the '+STATE.grade+' '+STATE.subject+' syllabus outcomes.';
   if(ok&&STATE.questions.length===0) renderQuestionRows();
 }
-function addQuestion(){STATE.questions.push({marks:1,outcomeCode:'',indicatorCode:'',cogLevel:'Knowledge'});renderQuestionRows();}
-function addMultipleQuestions(){for(var i=0;i<5;i++) STATE.questions.push({marks:1,outcomeCode:'',indicatorCode:'',cogLevel:'Knowledge'});renderQuestionRows();}
+function addQuestion(){STATE.questions.push({marks:1,cogLevel:'Knowledge',mappings:[{outcomeCode:'',indicatorCode:''}]});renderQuestionRows();}
+function addMultipleQuestions(){for(var i=0;i<5;i++) STATE.questions.push({marks:1,cogLevel:'Knowledge',mappings:[{outcomeCode:'',indicatorCode:''}]});renderQuestionRows();}
 function removeQuestion(idx){STATE.questions.splice(idx,1);renderQuestionRows();}
 
 function renderQuestionRows(){
@@ -406,46 +405,70 @@ function renderQuestionRows(){
   var ocKeys=Object.keys(outcomes);
   var html='';
   STATE.questions.forEach(function(q,i){
-    var ocOpts='<option value="">Select outcome…</option>';
-    ocKeys.forEach(function(k){var o=outcomes[k];ocOpts+='<option value="'+esc(k)+'"'+(q.outcomeCode===k?' selected':'')+'>'+esc(k)+' — '+esc((o.os||'').slice(0,55))+'…</option>';});
-    var icOpts='<option value="">Select indicator…</option>';
-    if(q.outcomeCode&&outcomes[q.outcomeCode]){outcomes[q.outcomeCode].inds.forEach(function(ind){icOpts+='<option value="'+esc(ind.ic)+'"'+(q.indicatorCode===ind.ic?' selected':'')+'>'+esc(ind.ic)+' — '+esc((ind.indicator||'').slice(0,50))+'…</option>';});}
-    var cogOpts='';COG_LEVELS.forEach(function(c){cogOpts+='<option'+(q.cogLevel===c?' selected':'')+'>'+c+'</option>';});
-    var hintHtml='';
-    if(q.indicatorCode&&q.outcomeCode&&outcomes[q.outcomeCode]){
-      var oc=outcomes[q.outcomeCode];
-      var ind=null;oc.inds.forEach(function(x){if(x.ic===q.indicatorCode)ind=x;});
-      if(ind) hintHtml='<div class="q-indicator-hint"><strong>'+esc(oc.strand)+'</strong> › '+esc(oc.subStrand)+'<br>'+esc(ind.indicator)+'</div>';
-    }
+    var cogOpts='';COG_LEVELS.forEach(function(cv){cogOpts+='<option'+(q.cogLevel===cv?' selected':'')+'>'+cv+'</option>';});
     html+='<div class="q-row">'
-      +'<div class="q-head"><span class="q-num">Q'+(i+1)+'</span><button class="btn btn-sm" style="background:#fee2e2;color:#7f1d1d;margin-left:auto;padding:4px 10px;font-size:11px" onclick="removeQuestion('+i+')">Remove</button></div>'
-      +'<div class="q-fields">'
-      +'<div><label class="field-label">Marks</label><input type="number" min="1" max="20" value="'+q.marks+'" onchange="onQField('+i+',\'marks\',this.value)"></div>'
-      +'<div><label class="field-label">Outcome</label><select onchange="onQField('+i+',\'outcomeCode\',this.value)">'+ocOpts+'</select></div>'
-      +'<div><label class="field-label">Indicator</label><select onchange="onQField('+i+',\'indicatorCode\',this.value)"'+(q.outcomeCode?'':' disabled')+'>'+icOpts+'</select></div>'
-      +'<div><label class="field-label">Cog. level</label><select onchange="onQField('+i+',\'cogLevel\',this.value)">'+cogOpts+'</select></div>'
-      +'</div>'+hintHtml+'</div>';
+      +'<div class="q-head"><span class="q-num">Q'+(i+1)+'</span>'
+      +'<span style="font-size:12px;color:#64748b;margin-left:8px">'+q.mappings.length+' mapping'+(q.mappings.length!==1?'s':'')+'</span>'
+      +'<button class="btn btn-sm" style="background:#fee2e2;color:#7f1d1d;margin-left:auto;padding:4px 10px;font-size:11px" onclick="removeQuestion('+i+')">Remove</button></div>'
+      +'<div style="display:grid;grid-template-columns:80px 140px 1fr;gap:10px;margin-bottom:8px">'
+      +'<div><label class="field-label">Marks</label><input type="number" min="1" max="20" value="'+q.marks+'" onchange="onQFieldBasic('+i+',\'marks\',this.value)"></div>'
+      +'<div><label class="field-label">Cog. level</label><select onchange="onQFieldBasic('+i+',\'cogLevel\',this.value)">'+cogOpts+'</select></div>'
+      +'<div></div></div>';
+    // Render each mapping
+    q.mappings.forEach(function(m,mi){
+      var ocOpts='<option value="">Select outcome\u2026</option>';
+      ocKeys.forEach(function(k){var o=outcomes[k];ocOpts+='<option value="'+esc(k)+'"'+(m.outcomeCode===k?' selected':'')+'>'+esc(k)+' \u2014 '+esc((o.os||'').slice(0,50))+'\u2026</option>';});
+      var icOpts='<option value="">Select indicator\u2026</option>';
+      if(m.outcomeCode&&outcomes[m.outcomeCode]){outcomes[m.outcomeCode].inds.forEach(function(ind){icOpts+='<option value="'+esc(ind.ic)+'"'+(m.indicatorCode===ind.ic?' selected':'')+'>'+esc(ind.ic)+' \u2014 '+esc((ind.indicator||'').slice(0,45))+'\u2026</option>';});}
+      html+='<div style="display:grid;grid-template-columns:1fr 1fr 32px;gap:8px;margin-bottom:6px;padding:6px 8px;background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0">'
+        +'<div><label class="field-label" style="font-size:10px">Outcome '+(mi+1)+'</label><select style="font-size:11px;padding:6px" onchange="onQMapping('+i+','+mi+',\'outcomeCode\',this.value)">'+ocOpts+'</select></div>'
+        +'<div><label class="field-label" style="font-size:10px">Indicator '+(mi+1)+'</label><select style="font-size:11px;padding:6px" onchange="onQMapping('+i+','+mi+',\'indicatorCode\',this.value)"'+(m.outcomeCode?'':' disabled')+'>'+icOpts+'</select></div>'
+        +'<div style="padding-top:18px">'+(q.mappings.length>1?'<button style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:14px" onclick="removeMapping('+i+','+mi+')" title="Remove">\u00d7</button>':'')+'</div></div>';
+      if(m.indicatorCode&&m.outcomeCode&&outcomes[m.outcomeCode]){
+        var oc=outcomes[m.outcomeCode];var ind=null;oc.inds.forEach(function(x){if(x.ic===m.indicatorCode)ind=x;});
+        if(ind) html+='<div class="q-indicator-hint" style="margin-bottom:6px"><strong>'+esc(oc.strand)+'</strong> \u203a '+esc(oc.subStrand)+'<br>'+esc(ind.indicator)+'</div>';
+      }
+    });
+    html+='<button class="btn btn-sm btn-outline" style="font-size:11px;padding:4px 10px;margin-top:4px" onclick="addMapping('+i+')">+ Add another outcome/indicator</button>';
+    html+='</div>';
   });
   container.innerHTML=html;
   var total=STATE.questions.reduce(function(a,q){return a+(parseInt(q.marks)||1);},0);
-  document.getElementById('tp-count').textContent=STATE.questions.length+' questions · '+total+' marks';
-  var allMapped=STATE.questions.length>0&&STATE.questions.every(function(q){return q.outcomeCode&&q.indicatorCode;});
-  document.getElementById('tp-done-btn').disabled=!allMapped;
+  document.getElementById('tp-count').textContent=STATE.questions.length+' questions \u00b7 '+total+' marks';
+  var allMapped=STATE.questions.length>0&&STATE.questions.every(function(q){return q.mappings.every(function(m){return m.outcomeCode&&m.indicatorCode;});});
+  document.getElementById('tp-save-section').style.display=allMapped?'block':'none';
+  if(allMapped){var mc=0;STATE.questions.forEach(function(q){mc+=q.mappings.length;});document.getElementById('tp-mapped-info').textContent='\u2713 '+STATE.questions.length+' questions \u00b7 '+mc+' outcome mappings \u00b7 '+total+' marks';}
 }
 
-function onQField(idx,field,val){
+function onQFieldBasic(idx,field,val){
   if(field==='marks') val=parseInt(val)||1;
   STATE.questions[idx][field]=val;
-  if(field==='outcomeCode'){STATE.questions[idx].indicatorCode='';}
+  renderQuestionRows();
+}
+function onQMapping(qIdx,mIdx,field,val){
+  STATE.questions[qIdx].mappings[mIdx][field]=val;
+  if(field==='outcomeCode') STATE.questions[qIdx].mappings[mIdx].indicatorCode='';
+  renderQuestionRows();
+}
+function addMapping(qIdx){
+  STATE.questions[qIdx].mappings.push({outcomeCode:'',indicatorCode:''});
+  renderQuestionRows();
+}
+function removeMapping(qIdx,mIdx){
+  if(STATE.questions[qIdx].mappings.length>1) STATE.questions[qIdx].mappings.splice(mIdx,1);
   renderQuestionRows();
 }
 
 function finishMapping(){
   var outcomes=getOutcomesForGrade(STATE.subject,STATE.grade);
   STATE.testAnalysis=STATE.questions.map(function(q,i){
-    var oc=outcomes[q.outcomeCode]||{};
-    var ind=null;(oc.inds||[]).forEach(function(x){if(x.ic===q.indicatorCode)ind=x;});
-    return {qNum:i+1,marks:parseInt(q.marks)||1,outcomeCode:q.outcomeCode,indicatorCode:q.indicatorCode,strand:oc.strand||'',subStrand:oc.subStrand||'',outcomeStatement:oc.os||'',indicator:ind?ind.indicator:'',cogLevel:q.cogLevel||'Knowledge',qText:'Question '+(i+1)};
+    var mappings=q.mappings.map(function(m){
+      var oc=outcomes[m.outcomeCode]||{};
+      var ind=null;(oc.inds||[]).forEach(function(x){if(x.ic===m.indicatorCode)ind=x;});
+      return {outcomeCode:m.outcomeCode,indicatorCode:m.indicatorCode,strand:oc.strand||'',subStrand:oc.subStrand||'',outcomeStatement:oc.os||'',indicator:ind?ind.indicator:''};
+    });
+    return {qNum:i+1,marks:parseInt(q.marks)||1,cogLevel:q.cogLevel||'Knowledge',qText:'Question '+(i+1),mappings:mappings,
+      outcomeCode:mappings[0].outcomeCode,indicatorCode:mappings[0].indicatorCode,strand:mappings[0].strand,subStrand:mappings[0].subStrand,outcomeStatement:mappings[0].outcomeStatement,indicator:mappings[0].indicator};
   });
   updateNav();updateDash();goPage('scores');
 }
@@ -538,12 +561,12 @@ function computeResults(){
   var totalMarks=qa.reduce(function(a,q){return a+(q.marks||1);},0);
   var qStats=qa.map(function(q,qi){var sum=0;studs.forEach(function(s){sum+=s.scores[qi];});var avg=sum/studs.length;var pct=q.marks>0?(avg/q.marks)*100:0;var o={};for(var k in q)o[k]=q[k];o.avg=+avg.toFixed(2);o.pct=+pct.toFixed(1);o.difficulty=pct>=80?"Easy":pct>=50?"Moderate":"Difficult";return o;});
   var studentStats=studs.map(function(s){var t=s.scores.reduce(function(a,b){return a+b;},0);var pct=totalMarks>0?(t/totalMarks)*100:0;return{index:s.index,name:s.name,scores:s.scores,total:t,pct:+pct.toFixed(1),level:getLevel(pct)};});
-  var ocMap={};qa.forEach(function(q,qi){var k=q.outcomeCode;if(!ocMap[k])ocMap[k]={outcomeCode:q.outcomeCode,strand:q.strand,subStrand:q.subStrand,outcomeStatement:q.outcomeStatement,qIndices:[],totalMax:0,totalScored:0};ocMap[k].qIndices.push(qi);ocMap[k].totalMax+=(q.marks||1)*studs.length;var sc=0;studs.forEach(function(s){sc+=s.scores[qi];});ocMap[k].totalScored+=sc;});
+  var ocMap={};qa.forEach(function(q,qi){var maps=q.mappings||[{outcomeCode:q.outcomeCode,indicatorCode:q.indicatorCode,strand:q.strand,subStrand:q.subStrand,outcomeStatement:q.outcomeStatement}];maps.forEach(function(m){var k=m.outcomeCode;if(!ocMap[k])ocMap[k]={outcomeCode:m.outcomeCode,strand:m.strand,subStrand:m.subStrand,outcomeStatement:m.outcomeStatement,qIndices:[],totalMax:0,totalScored:0};if(ocMap[k].qIndices.indexOf(qi)===-1){ocMap[k].qIndices.push(qi);ocMap[k].totalMax+=(q.marks||1)*studs.length;var sc=0;studs.forEach(function(s){sc+=s.scores[qi];});ocMap[k].totalScored+=sc;}});});
   var outcomeStats=Object.keys(ocMap).map(function(k){var o=ocMap[k];o.pct=o.totalMax>0?+((o.totalScored/o.totalMax)*100).toFixed(1):0;return o;});
-  var indMap={};qa.forEach(function(q,qi){var k=q.outcomeCode+'|'+q.indicatorCode;if(!indMap[k])indMap[k]={outcomeCode:q.outcomeCode,indicatorCode:q.indicatorCode,indicator:q.indicator,qIndices:[],totalMax:0,totalScored:0};indMap[k].qIndices.push(qi);indMap[k].totalMax+=(q.marks||1)*studs.length;var sc=0;studs.forEach(function(s){sc+=s.scores[qi];});indMap[k].totalScored+=sc;});
+  var indMap={};qa.forEach(function(q,qi){var maps=q.mappings||[{outcomeCode:q.outcomeCode,indicatorCode:q.indicatorCode,indicator:q.indicator}];maps.forEach(function(m){var k=m.outcomeCode+'|'+m.indicatorCode;if(!indMap[k])indMap[k]={outcomeCode:m.outcomeCode,indicatorCode:m.indicatorCode,indicator:m.indicator,qIndices:[],totalMax:0,totalScored:0};if(indMap[k].qIndices.indexOf(qi)===-1){indMap[k].qIndices.push(qi);indMap[k].totalMax+=(q.marks||1)*studs.length;var sc=0;studs.forEach(function(s){sc+=s.scores[qi];});indMap[k].totalScored+=sc;}});});
   var indicatorStats=Object.keys(indMap).map(function(k){var o=indMap[k];o.pct=o.totalMax>0?+((o.totalScored/o.totalMax)*100).toFixed(1):0;return o;});
   var avgSum=0;studentStats.forEach(function(s){avgSum+=s.pct;});var classAvg=+(avgSum/studentStats.length).toFixed(1);
-  var lc={FA:0,MA:0,A:0,B:0};studentStats.forEach(function(s){lc[s.level.code]++;});
+  var lc={FA:0,MA:0,A:0};studentStats.forEach(function(s){lc[s.level.code]++;});
   var sorted=outcomeStats.slice().sort(function(a,b){return b.pct-a.pct;});
   STATE.results={qStats:qStats,studentStats:studentStats,outcomeStats:outcomeStats,indicatorStats:indicatorStats,classAvg:classAvg,levelCounts:lc,strengths:sorted.slice(0,3),weaknesses:sorted.slice().reverse().slice(0,3),totalMarks:totalMarks,totalStudents:studs.length};
 }
@@ -553,7 +576,7 @@ function destroyCharts(){Object.keys(charts).forEach(function(k){try{charts[k].d
 function renderResults(){
   destroyCharts();var r=STATE.results;
   document.getElementById('results-subtitle').textContent=STATE.grade+' · '+STATE.subject+' · '+r.totalStudents+' students · '+r.totalMarks+' total marks';
-  var ms=[{l:'Class average',v:r.classAvg+'%',c:'#2563eb',bg:'#eff6ff'},{l:'Fully achieved',v:r.levelCounts.FA,s:'FA ≥85%',c:'#059669',bg:'#f0fdf4'},{l:'Mostly achieved',v:r.levelCounts.MA,s:'MA 65–84%',c:'#2563eb',bg:'#eff6ff'},{l:'Achieving',v:r.levelCounts.A,s:'A 40–64%',c:'#d97706',bg:'#fffbeb'},{l:'Beginning',v:r.levelCounts.B,s:'B <40%',c:'#dc2626',bg:'#fef2f2'}];
+  var ms=[{l:'Class average',v:r.classAvg+'%',c:'#2563eb',bg:'#eff6ff'},{l:'Fully achieved',v:r.levelCounts.FA,s:'FA ≥85%',c:'#059669',bg:'#f0fdf4'},{l:'Mostly achieved',v:r.levelCounts.MA,s:'MA 65–84%',c:'#2563eb',bg:'#eff6ff'},{l:'Achieving',v:r.levelCounts.A,s:'A 40–64%',c:'#d97706',bg:'#fffbeb'}];
   var mh='';ms.forEach(function(m){mh+='<div class="metric" style="background:'+m.bg+'"><div class="label" style="color:'+m.c+'">'+m.l+'</div><div class="value" style="color:'+m.c+'">'+m.v+'</div>'+(m.s?'<div class="sub">'+m.s+'</div>':'')+'</div>';});
   document.getElementById('results-metrics').innerHTML=mh;
   showResultsTab('overview',document.querySelector('.tab-btn'));
@@ -575,7 +598,7 @@ function renderOverview(r){
   var sh='';r.strengths.forEach(function(o){sh+='<div style="margin-bottom:10px;padding:10px;background:#fff;border-radius:8px;border:1px solid #a7f3d0"><div style="display:flex;justify-content:space-between"><span style="font-weight:700;color:#065f46;font-size:12px">'+esc(o.outcomeCode)+'</span><span style="font-weight:700;color:#059669">'+o.pct+'%</span></div><div style="font-size:11px;color:#374151;margin-top:3px">'+esc((o.outcomeStatement||'').slice(0,80))+'</div></div>';});
   var wh='';r.weaknesses.forEach(function(o){wh+='<div style="margin-bottom:10px;padding:10px;background:#fff;border-radius:8px;border:1px solid #fca5a5"><div style="display:flex;justify-content:space-between"><span style="font-weight:700;color:#7f1d1d;font-size:12px">'+esc(o.outcomeCode)+'</span><span style="font-weight:700;color:#dc2626">'+o.pct+'%</span></div><div style="font-size:11px;color:#374151;margin-top:3px">'+esc((o.outcomeStatement||'').slice(0,80))+'</div></div>';});
   el.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px"><div class="card"><h3>Achievement distribution</h3><div class="chart-wrap" style="height:200px"><canvas id="ch-pie"></canvas></div></div><div class="card"><h3>Question achievement %</h3><div class="chart-wrap" style="height:200px"><canvas id="ch-q"></canvas></div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="card" style="background:#f0fdf4;border-color:#a7f3d0"><h3 style="color:#065f46">💪 Class strengths</h3>'+sh+'</div><div class="card" style="background:#fef2f2;border-color:#fca5a5"><h3 style="color:#7f1d1d">⚠ Areas needing support</h3>'+wh+'</div></div>';
-  charts.pie=new Chart(document.getElementById('ch-pie'),{type:'doughnut',data:{labels:['FA','MA','A','B'],datasets:[{data:[r.levelCounts.FA,r.levelCounts.MA,r.levelCounts.A,r.levelCounts.B],backgroundColor:[LEVEL_COLORS.FA,LEVEL_COLORS.MA,LEVEL_COLORS.A,LEVEL_COLORS.B],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+  charts.pie=new Chart(document.getElementById('ch-pie'),{type:'doughnut',data:{labels:['FA','MA','A'],datasets:[{data:[r.levelCounts.FA,r.levelCounts.MA,r.levelCounts.A],backgroundColor:[LEVEL_COLORS.FA,LEVEL_COLORS.MA,LEVEL_COLORS.A],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
   charts.qbar=new Chart(document.getElementById('ch-q'),{type:'bar',data:{labels:r.qStats.map(function(q){return 'Q'+q.qNum;}),datasets:[{label:'Achievement %',data:r.qStats.map(function(q){return q.pct;}),backgroundColor:r.qStats.map(function(q){return getLevel(q.pct).color;}),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{min:0,max:100}},plugins:{legend:{display:false}}}});
 }
 function renderQTab(r){
@@ -612,10 +635,17 @@ function renderITab(r){
 // CHECKLISTS
 function renderChecklists(){
   var r=STATE.results,qa=STATE.testAnalysis,studs=r.studentStats,groups={};
-  qa.forEach(function(q,qi){if(!groups[q.outcomeCode])groups[q.outcomeCode]={oc:q.outcomeCode,strand:q.strand,subStrand:q.subStrand,outcomeStatement:q.outcomeStatement,inds:{}};if(!groups[q.outcomeCode].inds[q.indicatorCode])groups[q.outcomeCode].inds[q.indicatorCode]={ic:q.indicatorCode,indicator:q.indicator,qIndices:[]};groups[q.outcomeCode].inds[q.indicatorCode].qIndices.push(qi);});
+  qa.forEach(function(q,qi){
+    var maps=q.mappings||[{outcomeCode:q.outcomeCode,indicatorCode:q.indicatorCode,indicator:q.indicator,strand:q.strand,subStrand:q.subStrand,outcomeStatement:q.outcomeStatement}];
+    maps.forEach(function(m){
+      if(!groups[m.outcomeCode])groups[m.outcomeCode]={oc:m.outcomeCode,strand:m.strand,subStrand:m.subStrand,outcomeStatement:m.outcomeStatement,inds:{}};
+      if(!groups[m.outcomeCode].inds[m.indicatorCode])groups[m.outcomeCode].inds[m.indicatorCode]={ic:m.indicatorCode,indicator:m.indicator,qIndices:[]};
+      if(groups[m.outcomeCode].inds[m.indicatorCode].qIndices.indexOf(qi)===-1)groups[m.outcomeCode].inds[m.indicatorCode].qIndices.push(qi);
+    });
+  });
   var html='';
   Object.keys(groups).forEach(function(gk){
-    var g=groups[gk],inds=Object.keys(g.inds).map(function(k){return g.inds[k];}),counts={FA:0,MA:0,A:0,B:0};
+    var g=groups[gk],inds=Object.keys(g.inds).map(function(k){return g.inds[k];}),counts={FA:0,MA:0,A:0};
     studs.forEach(function(s){counts[s.level.code]++;});
     html+='<div style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;margin-bottom:28px"><div class="checklist-header"><div class="school">SEENU ATOLL SCHOOL</div><div class="sub">OUTCOME ASSESSMENT RECORD SHEET · FIRST TERM 2026</div></div>'
       +'<div class="checklist-meta">'
@@ -640,10 +670,71 @@ function renderChecklists(){
       +'<span style="display:flex;align-items:center;gap:4px"><span class="badge badge-FA">FA</span><span style="color:#6b7280">Fully Achieved &#8805;85%</span></span>'
       +'<span style="display:flex;align-items:center;gap:4px"><span class="badge badge-MA">MA</span><span style="color:#6b7280">Mostly Achieved 65–84%</span></span>'
       +'<span style="display:flex;align-items:center;gap:4px"><span class="badge badge-A">A</span><span style="color:#6b7280">Achieving 40–64%</span></span>'
-      +'<span style="display:flex;align-items:center;gap:4px"><span class="badge badge-B">B</span><span style="color:#6b7280">Beginning &lt;40%</span></span>'
+      
       +'</div></div>';
   });
   document.getElementById('checklists-container').innerHTML=html;
+}
+
+
+// CHECKLIST EXCEL DOWNLOAD
+function downloadChecklists(){
+  var r=STATE.results,qa=STATE.testAnalysis;if(!r||!qa)return;
+  var wb=XLSX.utils.book_new();
+  var groups={};
+  qa.forEach(function(q,qi){
+    var maps=q.mappings||[{outcomeCode:q.outcomeCode,indicatorCode:q.indicatorCode,indicator:q.indicator,strand:q.strand,subStrand:q.subStrand,outcomeStatement:q.outcomeStatement}];
+    maps.forEach(function(m){
+      if(!groups[m.outcomeCode])groups[m.outcomeCode]={oc:m.outcomeCode,strand:m.strand,subStrand:m.subStrand,outcomeStatement:m.outcomeStatement,inds:{}};
+      if(!groups[m.outcomeCode].inds[m.indicatorCode])groups[m.outcomeCode].inds[m.indicatorCode]={ic:m.indicatorCode,indicator:m.indicator,qIndices:[]};
+      if(groups[m.outcomeCode].inds[m.indicatorCode].qIndices.indexOf(qi)===-1)groups[m.outcomeCode].inds[m.indicatorCode].qIndices.push(qi);
+    });
+  });
+  var sheetNum=0;
+  Object.keys(groups).forEach(function(gk){
+    var g=groups[gk],inds=Object.keys(g.inds).map(function(k){return g.inds[k];});
+    sheetNum++;
+    var data=[];
+    data.push(['SEENU ATOLL SCHOOL']);
+    data.push(['OUTCOME ASSESSMENT RECORD SHEET - FIRST TERM 2026']);
+    data.push([]);
+    data.push(['Subject:',STATE.subject,'','Grade:',STATE.grade]);
+    data.push(['Strand:',g.strand,'','Sub-strand:',g.subStrand]);
+    data.push(['Outcome:',g.oc+' - '+g.outcomeStatement]);
+    data.push([]);
+    var hdr=['#','INDEX','NAME'];
+    inds.forEach(function(ind){hdr.push(ind.ic);});
+    hdr.push('FINAL GRADE');
+    data.push(hdr);
+    var indHdr=['','',''];
+    inds.forEach(function(ind){indHdr.push((ind.indicator||'').slice(0,40));});
+    indHdr.push('');
+    data.push(indHdr);
+    var counts={FA:0,MA:0,A:0};
+    r.studentStats.forEach(function(s,si){
+      var row=[si+1,s.index,s.name];
+      inds.forEach(function(ind){
+        var mx=0,gt=0;
+        ind.qIndices.forEach(function(qi){mx+=(qa[qi].marks||1);gt+=(s.scores[qi]||0);});
+        var p=mx>0?(gt/mx)*100:0;
+        row.push(getLevel(p).code);
+      });
+      row.push(s.level.code);
+      counts[s.level.code]++;
+      data.push(row);
+    });
+    data.push([]);
+    data.push(['No. of students achieved:','FA: '+counts.FA,'MA: '+counts.MA,'A: '+counts.A]);
+    data.push([]);
+    data.push(['Checked by Leading Teacher:','_______________','Sign:','_______________','Date:','_______________']);
+    var ws=XLSX.utils.aoa_to_sheet(data);
+    ws['!cols']=[{wch:4},{wch:10},{wch:20}];
+    inds.forEach(function(){ws['!cols'].push({wch:14});});
+    ws['!cols'].push({wch:12});
+    var sheetName=(g.oc||'Sheet'+sheetNum).slice(0,31);
+    XLSX.utils.book_append_sheet(wb,ws,sheetName);
+  });
+  XLSX.writeFile(wb,'SAS_Checklists_'+STATE.grade.replace(/ /g,'_')+'_'+STATE.subject.replace(/ /g,'_')+'.xlsx');
 }
 
 // REPORT — auto-generated, no API
@@ -655,13 +746,13 @@ function renderReport(){
   var h='<div class="card"><div style="text-align:center;padding-bottom:18px;border-bottom:2px solid #e2e8f0;margin-bottom:20px"><div style="font-size:17px;font-weight:700">SEENU ATOLL SCHOOL</div><div style="font-size:13px;color:#6b7280;margin-top:3px">Assessment Analysis Report · First Term 2026</div><div style="font-size:13px;color:#6b7280">'+esc(STATE.subject)+' · '+esc(STATE.grade)+' · '+r.totalStudents+' students</div></div><div class="report-body">'
     +'<h2>1. Executive Summary</h2>'
     +'<p>This report presents the analysis of the '+esc(STATE.subject)+' assessment for '+esc(STATE.grade)+' conducted during the First Term of 2026 at Seenu Atoll School. The assessment covered '+r.qStats.length+' questions totaling '+r.totalMarks+' marks, evaluating '+r.outcomeStats.length+' learning outcome'+(r.outcomeStats.length!==1?'s':'')+' and '+r.indicatorStats.length+' indicator'+(r.indicatorStats.length!==1?'s':'')+'. A total of '+r.totalStudents+' students were assessed.</p>'
-    +'<p>The class achieved an overall average of <strong>'+r.classAvg+'%</strong>. Of the '+r.totalStudents+' students, '+r.levelCounts.FA+' achieved Fully Achieved (FA), '+r.levelCounts.MA+' achieved Mostly Achieved (MA), '+r.levelCounts.A+' are at the Achieving (A) level, and '+r.levelCounts.B+' are at the Beginning (B) level.</p>'
+    +'<p>The class achieved an overall average of <strong>'+r.classAvg+'%</strong>. Of the '+r.totalStudents+' students, '+r.levelCounts.FA+' achieved Fully Achieved (FA), '+r.levelCounts.MA+' achieved Mostly Achieved (MA), and '+r.levelCounts.A+' are at the Achieving (A) level.</p>'
     +'<h2>2. Class Achievement Overview</h2>'
     +'<p>The distribution of achievement levels across the class is as follows:</p><ul>'
     +'<li><strong>Fully Achieved (FA &#8805; 85%):</strong> '+r.levelCounts.FA+' students ('+Math.round(r.levelCounts.FA/r.totalStudents*100)+'%)</li>'
     +'<li><strong>Mostly Achieved (MA 65–84%):</strong> '+r.levelCounts.MA+' students ('+Math.round(r.levelCounts.MA/r.totalStudents*100)+'%)</li>'
     +'<li><strong>Achieving (A 40–64%):</strong> '+r.levelCounts.A+' students ('+Math.round(r.levelCounts.A/r.totalStudents*100)+'%)</li>'
-    +'<li><strong>Beginning (B &lt; 40%):</strong> '+r.levelCounts.B+' students ('+Math.round(r.levelCounts.B/r.totalStudents*100)+'%)</li></ul>'
+    +'</ul>'
     +'<h2>3. Outcome Analysis</h2>';
   r.outcomeStats.forEach(function(o){var lv=getLevel(o.pct);h+='<h3>'+esc(o.outcomeCode)+' — '+esc(o.strand)+' &#8250; '+esc(o.subStrand)+'</h3><p><strong>Outcome:</strong> '+esc(o.outcomeStatement)+'</p><p>Class achievement: <strong style="color:'+lv.color+'">'+o.pct+'% ('+lv.code+')</strong>. Assessed in questions: Q'+o.qIndices.map(function(i){return i+1;}).join(', Q')+'.</p>';});
   h+='<h2>4. Students Requiring Support</h2>';
@@ -734,7 +825,7 @@ async function analyzeWithAI() {
     + "SYLLABUS (OutcomeCode|IndicatorCode|Strand|SubStrand|OutcomeStatement|Indicator):\n" + syllabusCtx + "\n\n"
     + "Analyze each question and map to the most appropriate outcome and indicator.\n"
     + "Respond ONLY with a valid JSON array. Start with [ and end with ]. No other text.\n"
-    + 'Each element: {"qNum":1,"qText":"brief description","marks":1,"outcomeCode":"...","indicatorCode":"...","strand":"...","subStrand":"...","outcomeStatement":"...","indicator":"...","cogLevel":"Knowledge|Understanding|Application|Analysis|Evaluation|Creation"}\n'
+    + 'Each element: {"qNum":1,"qText":"brief description","marks":1,"cogLevel":"Knowledge|Understanding|Application|Analysis|Evaluation|Creation","mappings":[{"outcomeCode":"...","indicatorCode":"...","strand":"...","subStrand":"...","outcomeStatement":"...","indicator":"..."}]} — mappings is an array; include ALL relevant outcomes and indicators for each question (can be 1 or more)\n'
     + "Estimate marks if not shown: MCQ=1, short=2, long=5. Map EVERY question.";
 
   var messages;
@@ -764,11 +855,16 @@ async function analyzeWithAI() {
     var parsed = JSON.parse(clean.slice(s, e + 1));
 
     // Load into STATE
+    // Handle both flat (old) and mappings (new) AI response formats
     STATE.questions = parsed.map(function(q) {
-      return { marks: q.marks || 1, outcomeCode: q.outcomeCode, indicatorCode: q.indicatorCode, cogLevel: q.cogLevel || "Knowledge" };
+      var maps = q.mappings || [{ outcomeCode: q.outcomeCode, indicatorCode: q.indicatorCode }];
+      return { marks: q.marks || 1, cogLevel: q.cogLevel || "Knowledge", mappings: maps };
     });
     STATE.testAnalysis = parsed.map(function(q, i) {
-      return { qNum: i + 1, marks: q.marks || 1, outcomeCode: q.outcomeCode, indicatorCode: q.indicatorCode, strand: q.strand || '', subStrand: q.subStrand || '', outcomeStatement: q.outcomeStatement || '', indicator: q.indicator || '', cogLevel: q.cogLevel || 'Knowledge', qText: q.qText || '' };
+      var maps = (q.mappings || [{ outcomeCode: q.outcomeCode||'', indicatorCode: q.indicatorCode||'', strand: q.strand||'', subStrand: q.subStrand||'', outcomeStatement: q.outcomeStatement||'', indicator: q.indicator||'' }]);
+      var first = maps[0] || {};
+      return { qNum: i+1, marks: q.marks||1, cogLevel: q.cogLevel||'Knowledge', qText: q.qText||'', mappings: maps,
+        outcomeCode: first.outcomeCode||'', indicatorCode: first.indicatorCode||'', strand: first.strand||'', subStrand: first.subStrand||'', outcomeStatement: first.outcomeStatement||'', indicator: first.indicator||'' };
     });
 
     // Show results table
@@ -777,7 +873,10 @@ async function analyzeWithAI() {
     var cogColors = { Knowledge:"#6366f1", Understanding:"#2563eb", Application:"#059669", Analysis:"#d97706", Evaluation:"#dc2626", Creation:"#7c3aed" };
     var tbody = '';
     parsed.forEach(function(q, i) {
-      tbody += '<tr><td style="font-weight:700">Q' + (i+1) + '</td><td style="text-align:center"><span class="badge" style="background:#dbeafe;color:#1e40af">' + (q.marks||1) + '</span></td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + esc(q.qText) + '">' + esc(q.qText) + '</td><td style="color:#2563eb;font-weight:600">' + esc(q.outcomeCode) + '</td><td style="color:#7c3aed">' + esc(q.indicatorCode) + '</td><td style="max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(q.strand) + '</td><td><span class="badge" style="background:' + (cogColors[q.cogLevel]||'#e2e8f0') + ';color:#fff">' + esc(q.cogLevel) + '</span></td></tr>';
+      var maps = q.mappings || [{outcomeCode:q.outcomeCode,indicatorCode:q.indicatorCode,strand:q.strand}];
+      var mapText = maps.map(function(m){return esc(m.outcomeCode)+' / '+esc(m.indicatorCode);}).join('<br>');
+      var strandText = maps.map(function(m){return esc(m.strand||'');}).join('<br>');
+      tbody += '<tr><td style="font-weight:700">Q' + (i+1) + '</td><td style="text-align:center"><span class="badge" style="background:#dbeafe;color:#1e40af">' + (q.marks||1) + '</span></td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + esc(q.qText) + '">' + esc(q.qText) + '</td><td style="color:#2563eb;font-weight:600">' + mapText + '</td><td style="color:#7c3aed">' + maps.map(function(m){return esc(m.indicatorCode);}).join('<br>') + '</td><td style="max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + strandText + '</td><td><span class="badge" style="background:' + (cogColors[q.cogLevel]||'#e2e8f0') + ';color:#fff">' + esc(q.cogLevel) + '</span></td></tr>';
     });
     document.getElementById('tp-ai-tbody').innerHTML = tbody;
     document.getElementById('tp-ai-results').style.display = 'block';
