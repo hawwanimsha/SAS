@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>SAS Assessment System — Seenu Atoll School</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,sans-serif;background:#f8fafc;display:flex;min-height:100vh;font-size:14px;color:#0f172a}
@@ -203,17 +204,42 @@ tr:last-child td{border-bottom:none}
 <!-- SCORES -->
 <div id="page-scores" class="page">
   <h1 style="font-size:22px;font-weight:700;margin-bottom:4px">Student Scores</h1>
-  <p style="color:#64748b;margin-bottom:16px">Paste student score data as CSV. One student per row.</p>
-  <div class="alert alert-success" id="scores-format-hint">
-    <strong>Required format:</strong>
-    <code id="scores-format-code" style="display:block;margin-top:6px;background:#fff;padding:8px 10px;border-radius:5px;font-size:12px">Index,Name,Q1,Q2,Q3…</code>
-    <div style="margin-top:6px" id="scores-marks-info"></div>
+  <p style="color:#64748b;margin-bottom:16px">Download the template, fill in student scores, and upload it back.</p>
+  <!-- Step 1: Download template -->
+  <div class="card" style="border:2px solid #059669;margin-bottom:16px">
+    <h3 style="color:#059669">Step 1 — Download score template</h3>
+    <p style="font-size:12px;color:#64748b;margin-bottom:12px">Get an Excel template with the correct columns for all questions. Fill in student names and scores, then upload.</p>
+    <div id="scores-marks-info" style="font-size:13px;margin-bottom:10px"></div>
+    <button class="btn btn-success" onclick="downloadTemplate()">📥 Download Excel template</button>
   </div>
-  <textarea id="scores-csv" rows="10" placeholder="Index,Name,Q1,Q2,Q3&#10;1,Ahmed Ali,4,3,2&#10;2,Ali Mohamed,5,4,1" style="font-family:monospace;resize:vertical;margin-bottom:12px"></textarea>
-  <div id="scores-error" class="alert alert-error" style="display:none"></div>
-  <button class="btn btn-primary" onclick="parseScores()">Analyse scores →</button>
+  <!-- Step 2: Upload filled file -->
+  <div class="card" style="margin-bottom:16px">
+    <h3>Step 2 — Upload filled scores</h3>
+    <p style="font-size:12px;color:#64748b;margin-bottom:12px">Upload the filled Excel (.xlsx) or CSV (.csv) file.</p>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div style="border:2px dashed #e2e8f0;border-radius:10px;padding:16px 24px;text-align:center;cursor:pointer;min-width:160px" id="scores-dropzone" onclick="document.getElementById('scores-file').click()">
+        <input type="file" id="scores-file" accept=".xlsx,.xls,.csv,.tsv" style="display:none" onchange="handleScoreFile(this)">
+        <div style="font-size:24px;margin-bottom:4px">📊</div>
+        <div style="font-size:12px;font-weight:500" id="scores-filename">Click to upload file</div>
+        <div style="font-size:11px;color:#9ca3af;margin-top:2px">.xlsx or .csv</div>
+      </div>
+      <div id="scores-file-status" style="font-size:13px;color:#64748b"></div>
+    </div>
+  </div>
+  <!-- OR paste CSV -->
+  <div style="display:flex;align-items:center;gap:12px;color:#94a3b8;font-size:12px;font-weight:500;margin-bottom:12px"><div style="flex:1;height:1px;background:#e2e8f0"></div>OR paste CSV directly<div style="flex:1;height:1px;background:#e2e8f0"></div></div>
+  <div class="card">
+    <p style="font-size:12px;color:#64748b;margin-bottom:8px">Required header row: <code id="scores-format-code" style="background:#f8fafc;padding:3px 6px;border-radius:3px;font-size:11px">Index,Name,Q1,Q2,Q3…</code></p>
+    <textarea id="scores-csv" rows="6" placeholder="Index,Name,Q1,Q2,Q3&#10;1,Ahmed Ali,4,3,2&#10;2,Ali Mohamed,5,4,1" style="font-family:monospace;resize:vertical;margin-bottom:10px;font-size:12px"></textarea>
+    <button class="btn btn-primary btn-sm" onclick="parseScores()">Parse CSV →</button>
+  </div>
+  <div id="scores-error" class="alert alert-error" style="display:none;margin-top:12px"></div>
+  <!-- Preview -->
   <div id="scores-preview" style="display:none;margin-top:20px">
-    <div style="font-size:13px;font-weight:500;margin-bottom:10px" id="scores-preview-title"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div style="font-size:14px;font-weight:500" id="scores-preview-title"></div>
+      <button class="btn btn-success btn-sm" onclick="confirmScores()">✓ Confirm &amp; analyze →</button>
+    </div>
     <div class="tbl-wrap"><table><thead><tr id="scores-preview-head"></tr></thead><tbody id="scores-preview-body"></tbody></table></div>
   </div>
 </div>
@@ -429,26 +455,72 @@ function initScoresPage(){
   var qa=STATE.testAnalysis; if(!qa) return;
   var cols=['Index','Name']; qa.forEach(function(q){cols.push('Q'+q.qNum);});
   document.getElementById('scores-format-code').textContent=cols.join(',');
-  document.getElementById('scores-marks-info').innerHTML='Total marks: <strong>'+qa.reduce(function(a,q){return a+(q.marks||1);},0)+'</strong> · '+qa.length+' questions';
+  var totalMarks=qa.reduce(function(a,q){return a+(q.marks||1);},0);
+  document.getElementById('scores-marks-info').innerHTML='<strong>'+qa.length+' questions \u00b7 '+totalMarks+' total marks</strong> \u2014 template will have columns: Index, Name, Q1 through Q'+qa.length;
+}
+function downloadTemplate(){
+  var qa=STATE.testAnalysis; if(!qa) return;
+  var headers=['Index','Name'];
+  var subHeaders=['',''];
+  qa.forEach(function(q){headers.push('Q'+q.qNum);subHeaders.push('(max '+q.marks+')');});
+  var wsData=[headers,subHeaders];
+  for(var i=1;i<=25;i++){var row=[i,''];qa.forEach(function(){row.push('');});wsData.push(row);}
+  var ws=XLSX.utils.aoa_to_sheet(wsData);
+  ws['!cols']=[{wch:8},{wch:20}];
+  qa.forEach(function(){ws['!cols'].push({wch:8});});
+  var wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Scores');
+  XLSX.writeFile(wb,STATE.grade.replace(/ /g,'_')+'_'+STATE.subject.replace(/ /g,'_')+'_Scores_Template.xlsx');
+}
+function handleScoreFile(input){
+  var file=input.files[0]; if(!file) return;
+  document.getElementById('scores-filename').textContent=file.name;
+  document.getElementById('scores-dropzone').style.borderColor='#059669';
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var data=new Uint8Array(e.target.result);
+      var wb=XLSX.read(data,{type:'array'});
+      var ws=wb.Sheets[wb.SheetNames[0]];
+      var json=XLSX.utils.sheet_to_json(ws,{defval:''});
+      if(!json.length){document.getElementById('scores-file-status').innerHTML='<span style="color:#dc2626">No data found in file.</span>';return;}
+      loadStudentsFromRows(json);
+      document.getElementById('scores-file-status').innerHTML='<span style="color:#059669;font-weight:500">\u2713 '+STATE.students.length+' students loaded from '+esc(file.name)+'</span>';
+    }catch(ex){
+      document.getElementById('scores-file-status').innerHTML='<span style="color:#dc2626">Error reading file: '+esc(ex.message)+'</span>';
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+function loadStudentsFromRows(rows){
+  var qa=STATE.testAnalysis; if(!qa) return;
+  STATE.students=rows.map(function(r,i){
+    var index=r.Index||r.index||r.No||r.no||r['INDEX']||String(i+1);
+    var name=r.Name||r.name||r.Student||r.student||r['NAME']||'';
+    if(String(index).trim()===''&&String(name).trim()==='') return null;
+    if(String(index).indexOf('max')!==-1||String(name).indexOf('max')!==-1) return null;
+    var scores=qa.map(function(q){
+      var v=parseFloat(r['Q'+q.qNum]||r['q'+q.qNum]||'0');
+      return isNaN(v)?0:Math.min(v,q.marks||1);
+    });
+    return {index:String(index),name:String(name),scores:scores};
+  }).filter(function(s){return s!==null;});
+  renderScoresPreview();
 }
 function parseScores(){
   var errDiv=document.getElementById('scores-error'); errDiv.style.display='none';
   if(!STATE.testAnalysis){showErr(errDiv,"Map the test paper first.");return;}
   var csv=document.getElementById('scores-csv').value.trim();
-  if(!csv){showErr(errDiv,"Please paste CSV data.");return;}
+  if(!csv){showErr(errDiv,"Please paste CSV data or upload a file above.");return;}
   try{
-    var rows=parseCSV(csv); if(!rows.length){showErr(errDiv,"No data rows found.");return;}
-    STATE.students=rows.map(function(r,i){
-      var index=r.Index||r.index||r.No||r.no||String(i+1);
-      var name=r.Name||r.name||r.Student||r.student||'';
-      var scores=STATE.testAnalysis.map(function(q){
-        var v=parseFloat(r['Q'+q.qNum]||r['q'+q.qNum]||'0');return isNaN(v)?0:Math.min(v,q.marks||1);
-      });
-      return {index:index,name:name,scores:scores};
-    });
-    computeResults(); renderScoresPreview(); updateNav(); updateDash();
-    setTimeout(function(){goPage('results');},400);
+    var rows=parseCSV(csv); if(!rows.length){showErr(errDiv,"No data rows found. Make sure the first row is: Index,Name,Q1,Q2,...");return;}
+    loadStudentsFromRows(rows);
   }catch(ex){showErr(errDiv,"CSV error: "+ex.message);}
+}
+function confirmScores(){
+  if(!STATE.students.length) return;
+  computeResults(); updateNav(); updateDash();
+  goPage('results');
 }
 function renderScoresPreview(){
   var qa=STATE.testAnalysis,total=qa.reduce(function(a,q){return a+(q.marks||1);},0);
