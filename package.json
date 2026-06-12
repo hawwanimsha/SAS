@@ -1,7 +1,7 @@
 {
   "name": "sas-assessment-system",
   "version": "1.0.0",
-  "description": "Seenu Atoll School — AI-powered Assessment Analysis System",
+  "description": "Seenu Atoll School Assessment System",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
