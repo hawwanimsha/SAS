@@ -32,7 +32,7 @@ app.post("/api/claude", function (req, res) {
   }
   var body = req.body;
   var payload = JSON.stringify({
-    model: body.model || "claude-sonnet-4-20250514",
+    model: body.model || "claude-sonnet-4-6",
     max_tokens: body.max_tokens || 4000,
     system: body.system || "",
     messages: body.messages || []
