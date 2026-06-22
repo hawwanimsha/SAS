@@ -16,11 +16,11 @@
 <style>
 
 /* ── Google Fonts ──────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
 
 /* ── Design Tokens ─────────────────────────────────────────────── */
 :root {
-  --ocean-deep:    #143a52;   /* deep navy (headings, primary) */
+  --ocean-deep:    #13324e;   /* deep navy (headings, primary) */
   --ocean-mid:     #1f5e7d;   /* mid ocean blue */
   --ocean-light:   #7fb8d4;   /* sky / shallow blue */
   --ocean-pale:    #e7f1f7;   /* pale sky mist */
@@ -36,8 +36,8 @@
   --wave-1:        #7fb8d4;
   --wave-2:        #1f5e7d;
   --wave-green:    #2f7d4f;   /* hero wave band */
-  --leaf:          #9ed35a;   /* lime CTA */
-  --leaf-deep:     #74b733;   /* lime CTA hover/deep */
+  --leaf:          #7ed957;   /* bright CTA pill */
+  --leaf-deep:     #1f9e5a;   /* boli green */
   --success:       #5cb85c;   /* leaf green */
   --warn:          #c8852a;   /* amber */
   /* feature-card pastels (from landing screenshot) */
@@ -56,7 +56,7 @@
 
 /* ── Body ──────────────────────────────────────────────────────── */
 body {
-  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
   background: var(--sand);
   min-height: 100vh;
   color: var(--text-dark);
@@ -107,7 +107,7 @@ body::before {
 }
 .nav-logo img { height: 32px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(20,58,82,.1); }
 .nav-logo span {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Fraunces', serif;
   font-size: 13px; font-weight: 700;
   color: var(--ocean-deep); white-space: nowrap;
   letter-spacing: .02em;
@@ -146,7 +146,7 @@ body::before {
 .card:hover { box-shadow: 0 4px 20px rgba(10,74,90,.1); }
 
 .card-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Fraunces', serif;
   font-size: 15px; font-weight: 700;
   color: var(--ocean-deep);
   margin-bottom: 16px;
@@ -215,7 +215,7 @@ body::before {
   border: 1.5px solid var(--sand-dark);
   border-radius: 8px;
   padding: 9px 11px;
-  font-size: 13px; font-family: 'Nunito', sans-serif;
+  font-size: 13px; font-family: 'Inter', sans-serif;
   color: var(--text-dark); background: #fff;
   transition: border-color .2s, box-shadow .2s;
 }
@@ -250,7 +250,7 @@ body::before {
   cursor: pointer; color: #fff;
   letter-spacing: .04em;
   transition: transform .15s, box-shadow .15s, filter .15s;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 .btn:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.07); }
 .btn:active:not(:disabled) { transform: translateY(0); }
@@ -290,7 +290,7 @@ body::before {
 
 /* ── WEEKLY PLANNER ────────────────────────────────────────────── */
 .week-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; flex-wrap: wrap; }
-.week-bar select { border: 1.5px solid var(--sand-dark); border-radius: 8px; padding: 8px 11px; font-size: 13px; font-family: 'Nunito', sans-serif; color: var(--text-dark); background: #fff; }
+.week-bar select { border: 1.5px solid var(--sand-dark); border-radius: 8px; padding: 8px 11px; font-size: 13px; font-family: 'Inter', sans-serif; color: var(--text-dark); background: #fff; }
 .term-badge {
   background: linear-gradient(135deg, var(--ocean-deep), var(--ocean-mid));
   color: #fff; font-size: 11px; font-weight: 800;
@@ -348,7 +348,7 @@ body::before {
 .hist-del { font-size: 11px; color: #e0a0a0; cursor: pointer; margin-left: 10px; transition: color .15s; }
 .hist-del:hover { color: var(--coral); }
 .empty-msg { font-size: 13px; color: var(--text-light); text-align: center; padding: 32px; }
-.clear-btn { background: none; border: 1.5px solid #e0a0a0; color: #b05050; border-radius: 7px; padding: 6px 14px; font-size: 12px; cursor: pointer; margin-bottom: 14px; font-family: 'Nunito', sans-serif; font-weight: 700; transition: all .15s; }
+.clear-btn { background: none; border: 1.5px solid #e0a0a0; color: #b05050; border-radius: 7px; padding: 6px 14px; font-size: 12px; cursor: pointer; margin-bottom: 14px; font-family: 'Inter', sans-serif; font-weight: 700; transition: all .15s; }
 .clear-btn:hover { background: var(--coral-light); border-color: var(--coral); color: var(--coral); }
 
 /* ── ASSESSMENT TABS ───────────────────────────────────────────── */
@@ -359,8 +359,8 @@ body::before {
 
 /* ── OUTPUT BOX ────────────────────────────────────────────────── */
 .out-box { background: var(--sand); border: 1px solid var(--sand-dark); border-radius: 10px; padding: 16px; margin-top: 14px; }
-.out-box h3 { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--ocean-deep); margin-bottom: 12px; }
-.copy-btn { background: none; border: 1.5px solid var(--ocean-light); color: var(--ocean-mid); border-radius: 6px; padding: 5px 12px; font-size: 11px; cursor: pointer; margin-top: 8px; font-family: 'Nunito', sans-serif; font-weight: 700; transition: all .15s; }
+.out-box h3 { font-family: 'Fraunces', serif; font-size: 15px; color: var(--ocean-deep); margin-bottom: 12px; }
+.copy-btn { background: none; border: 1.5px solid var(--ocean-light); color: var(--ocean-mid); border-radius: 6px; padding: 5px 12px; font-size: 11px; cursor: pointer; margin-top: 8px; font-family: 'Inter', sans-serif; font-weight: 700; transition: all .15s; }
 .copy-btn:hover { background: var(--ocean-pale); }
 
 
@@ -381,7 +381,7 @@ body::before {
   text-align: center; margin-bottom: 28px;
 }
 .auth-logo h1 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Fraunces', serif;
   font-size: 32px; font-weight: 700;
   color: var(--ocean-deep); letter-spacing: .04em;
 }
@@ -401,9 +401,9 @@ body::before {
 .auth-tab.on { background: var(--ocean-deep); color: #fff; }
 .auth-field { margin-bottom: 14px; }
 .auth-field label { display: block; font-size: 10px; font-weight: 800; color: var(--ocean-mid); text-transform: uppercase; letter-spacing: .09em; margin-bottom: 5px; }
-.auth-field input { width: 100%; border: 1.5px solid var(--sand-dark); border-radius: 8px; padding: 11px 13px; font-size: 14px; font-family: 'Nunito', sans-serif; color: var(--text-dark); background: #fff; transition: border-color .2s; }
+.auth-field input { width: 100%; border: 1.5px solid var(--sand-dark); border-radius: 8px; padding: 11px 13px; font-size: 14px; font-family: 'Inter', sans-serif; color: var(--text-dark); background: #fff; transition: border-color .2s; }
 .auth-field input:focus { outline: none; border-color: var(--ocean-light); box-shadow: 0 0 0 3px rgba(47,170,184,.12); }
-.auth-btn { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--ocean-deep), var(--ocean-mid)); color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 800; cursor: pointer; font-family: 'Nunito', sans-serif; margin-top: 4px; transition: filter .15s, transform .15s; }
+.auth-btn { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--ocean-deep), var(--ocean-mid)); color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 800; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 4px; transition: filter .15s, transform .15s; }
 .auth-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
 .auth-btn:disabled { background: #b0c4cc; cursor: not-allowed; transform: none; }
 .auth-err { background: var(--coral-light); border: 1px solid rgba(232,98,74,.4); color: #8a2a1a; border-radius: 8px; padding: 10px 13px; font-size: 13px; font-weight: 600; margin-bottom: 14px; display: none; }
@@ -425,7 +425,7 @@ body::before {
 .user-plan { font-size: 10px; color: var(--text-light); white-space: nowrap; }
 .usage-pill { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: rgba(20,58,82,.08); color: var(--text-mid); white-space: nowrap; }
 .usage-pill.warn { background: rgba(232,98,74,.18); color: var(--coral); }
-.logout-btn { font-size: 11px; color: var(--text-mid); cursor: pointer; padding: 4px 8px; border-radius: 6px; border: 1px solid #d8e1e6; background: none; font-family: 'Nunito', sans-serif; transition: all .15s; }
+.logout-btn { font-size: 11px; color: var(--text-mid); cursor: pointer; padding: 4px 8px; border-radius: 6px; border: 1px solid #d8e1e6; background: none; font-family: 'Inter', sans-serif; transition: all .15s; }
 .logout-btn:hover { color: var(--ocean-deep); border-color: var(--ocean-light); }
 
 /* ── RESPONSIVE ────────────────────────────────────────────────── */
@@ -472,138 +472,95 @@ body::before {
 }
 
 /* ════════════════════════════════════════════════════════════════
-   LANDING / HOME PAGE
+   LANDING / HOME PAGE  (calm lagoon prototype)
    ════════════════════════════════════════════════════════════════ */
-.home-page { display: none; max-width: none; margin: 0; padding: 0; }
-.home-page.on { display: block; animation: fadeUp .3s ease; }
+.home-page { display:none; max-width:none; margin:0; padding:0; font-family:'Inter',sans-serif; }
+.home-page.on { display:block; animation:fadeUp .3s ease; }
 
-/* Hero with sky gradient */
-.home-hero {
-  position: relative;
-  background: linear-gradient(180deg, #bcd9ea 0%, #cfe4f0 38%, #e3f0f5 60%, #eef5f7 100%);
-  overflow: hidden;
-  padding-bottom: 0;
+/* sky / lagoon */
+.home-sky {
+  position:relative; overflow:hidden;
+  background:linear-gradient(180deg,#a6c8e6 0%,#c9e0ef 38%,#bcdcea 48%,#a9d2e3 66%,#cfe7ec 82%,#e7d7b6 100%);
+  padding-bottom:150px;
 }
 
 /* top bar over the sky */
 .home-topbar {
-  position: relative; z-index: 4;
-  display: flex; align-items: center;
-  padding: 20px 40px;
-  gap: 18px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:22px 40px; max-width:1280px; margin:0 auto; position:relative; z-index:4;
 }
-.home-brand {
-  font-family: 'Playfair Display', serif;
-  font-size: 30px; font-weight: 700;
-  color: var(--ocean-deep); letter-spacing: .01em;
-  cursor: pointer; line-height: 1;
-}
-.home-nav-spacer { flex: 1; }
-.home-navlink {
-  font-size: 15px; font-weight: 700; color: var(--ocean-deep);
-  cursor: pointer; background: none; border: none;
-  font-family: 'Nunito', sans-serif; padding: 8px 6px;
-  transition: opacity .15s;
-}
-.home-navlink:hover { opacity: .65; }
+.home-brand { font-family:'Fraunces',serif; font-weight:700; font-size:24px; letter-spacing:-.5px; color:#16344e; cursor:pointer; }
+.home-nav-mid { display:flex; gap:34px; align-items:center; }
+.home-navlink { color:rgba(20,42,64,.82); background:none; border:none; font-family:'Inter',sans-serif; font-weight:600; font-size:15px; cursor:pointer; }
+.home-navlink:hover { color:#16344e; }
+.home-nav-right { display:flex; align-items:center; gap:22px; }
+.home-login { color:#16344e; font-weight:600; font-size:15px; background:none; border:none; cursor:pointer; font-family:'Inter',sans-serif; }
+.home-login:hover { color:var(--leaf-deep); }
 .home-cta {
-  background: var(--leaf); color: var(--ocean-deep);
-  font-weight: 800; font-size: 15px; font-family: 'Nunito', sans-serif;
-  border: none; border-radius: 12px; padding: 12px 22px;
-  cursor: pointer; box-shadow: 0 4px 14px rgba(116,183,51,.35);
-  transition: transform .15s, filter .15s;
-  white-space: nowrap;
+  font-family:'Inter',sans-serif; font-weight:700; font-size:15px; border:none; border-radius:10px; cursor:pointer;
+  padding:12px 20px; display:inline-flex; align-items:center; gap:8px; background:#7ed957; color:#14361a;
+  transition:transform .15s ease, box-shadow .15s ease;
 }
-.home-cta:hover { transform: translateY(-1px); filter: brightness(1.05); }
+.home-cta:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(126,217,87,.4); }
 
-/* hero headline */
-.home-hero-text { position: relative; z-index: 3; text-align: center; padding: 22px 20px 0; }
-.home-hero-text h1 {
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: clamp(40px, 7.5vw, 92px);
-  line-height: 1.02;
-  color: var(--ocean-deep);
-  margin: 0 auto;
-  max-width: 14em;
-  letter-spacing: -.01em;
+/* hero */
+.home-hero { position:relative; z-index:2; max-width:900px; margin:40px auto 0; padding:0 24px; text-align:center; }
+.home-hero h1 {
+  font-family:'Fraunces',serif; font-weight:700; color:#13324e;
+  font-size:clamp(34px,5.2vw,60px); line-height:1.05; letter-spacing:-1.2px;
+  text-shadow:0 1px 12px rgba(255,255,255,.45);
 }
-.home-hero-text p {
-  font-size: clamp(15px, 2vw, 21px);
-  color: #3f5560; font-weight: 600;
-  max-width: 640px; margin: 18px auto 0; line-height: 1.5;
-}
+.home-hero p { color:rgba(18,42,62,.82); font-size:clamp(15px,1.7vw,18px); max-width:560px; margin:18px auto 0; }
 
-/* scene (waves + sand + figures) sits at bottom of hero */
-.home-scene { position: relative; z-index: 2; margin-top: 14px; line-height: 0; }
-.home-scene svg { display: block; width: 100%; height: auto; }
+/* scene layers */
+.home-treeline { position:absolute; left:0; right:0; top:44%; transform:translateY(-50%); width:100%; height:38px; z-index:1; display:block; }
+.home-boat { position:absolute; left:4%; bottom:118px; width:104px; height:auto; z-index:1; pointer-events:none; }
+.home-people { position:absolute; left:50%; transform:translateX(-50%); bottom:30px; width:min(820px,92%); height:auto; z-index:1; pointer-events:none; }
+.home-silhouette { position:absolute; left:0; right:0; bottom:-1px; width:100%; height:150px; display:block; z-index:1; }
 
-/* feature cards */
-.home-cards {
-  background: #ffffff;
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 16px;
-  padding: 40px clamp(20px, 4vw, 56px) 30px;
-  max-width: 1340px; margin: 0 auto;
-}
+/* cards */
+.home-carousel { max-width:1180px; margin:34px auto 0; padding:0 24px; }
+.home-track { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
 .home-card {
-  border-radius: 18px;
-  padding: 22px 16px 24px;
-  text-align: center;
-  cursor: pointer;
-  border: 1px solid rgba(20,58,82,.05);
-  transition: transform .18s, box-shadow .18s;
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  flex:0 1 128px; border-radius:16px; padding:16px 12px 18px; text-align:center; cursor:pointer;
+  transition:transform .18s ease, box-shadow .18s ease; border:1px solid rgba(0,0,0,.02);
+  position:relative; isolation:isolate;
 }
-.home-card:hover { transform: translateY(-5px); box-shadow: 0 14px 30px rgba(20,58,82,.12); }
-.home-card .ic {
-  width: 52px; height: 52px; border-radius: 50%;
-  background: #fff; display: flex; align-items: center; justify-content: center;
-  margin-bottom: 10px; box-shadow: 0 3px 8px rgba(20,58,82,.08);
+.home-card:hover { transform:translateY(-5px); box-shadow:0 12px 28px rgba(20,40,28,.14); }
+.home-card::before {
+  content:""; position:absolute; inset:0; border-radius:inherit; z-index:-1;
+  background:radial-gradient(120% 80% at 25% 12%, rgba(255,255,255,.55), rgba(255,255,255,0) 60%);
+  mix-blend-mode:screen; pointer-events:none;
 }
-.home-card .ic svg { width: 24px; height: 24px; }
-.home-card h3 { font-size: 16px; font-weight: 800; color: var(--ocean-deep); margin: 0; }
-.home-card p { font-size: 12px; font-weight: 600; color: #5a6b73; line-height: 1.35; margin: 2px 0 0; }
+.home-badge { width:46px; height:46px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+.home-badge svg { width:22px; height:22px; }
+.home-card h3 { font-family:'Fraunces',serif; font-weight:600; font-size:15.5px; line-height:1.15; color:#14361a; }
+.home-card p { margin-top:7px; font-size:11.5px; color:#5b6b63; line-height:1.35; }
 
-.hc-lesson { background: linear-gradient(160deg, var(--c-lesson-a), var(--c-lesson-b)); }
-.hc-scheme { background: linear-gradient(160deg, var(--c-scheme-a), var(--c-scheme-b)); }
-.hc-check  { background: linear-gradient(160deg, var(--c-check-a),  var(--c-check-b)); }
-.hc-report { background: linear-gradient(160deg, var(--c-report-a), var(--c-report-b)); }
-.hc-assess { background: linear-gradient(160deg, var(--c-assess-a), var(--c-assess-b)); }
-.hc-cal    { background: linear-gradient(160deg, var(--c-cal-a),    var(--c-cal-b)); }
-.hc-tmpl   { background: linear-gradient(160deg, var(--c-tmpl-a),   var(--c-tmpl-b)); }
-.hc-hist   { background: linear-gradient(160deg, var(--c-hist-a),   var(--c-hist-b)); }
+.t-blue { background:linear-gradient(158deg,#d7f1ef 0%,#8fd9d2 100%); }  .t-blue .home-badge svg { color:#0c8a86; }
+.t-mint { background:linear-gradient(158deg,#dcecfb 0%,#a4d1f3 100%); }  .t-mint .home-badge svg { color:#2f7fc2; }
+.t-lilac{ background:linear-gradient(158deg,#e3efcf 0%,#b1d589 100%); }  .t-lilac .home-badge svg{ color:#5a8a2c; }
+.t-lav  { background:linear-gradient(158deg,#f5edda 0%,#e2d0a6 100%); }  .t-lav .home-badge svg  { color:#a9802f; }
+.t-green{ background:linear-gradient(158deg,#fbe1dd 0%,#ee9d90 100%); }  .t-green .home-badge svg{ color:#bf3b2c; }
+.t-peach{ background:linear-gradient(158deg,#fbeec8 0%,#f0d178 100%); }  .t-peach .home-badge svg{ color:#b07d12; }
+.t-rose { background:linear-gradient(158deg,#fde9bf 0%,#f5c563 100%); }  .t-rose .home-badge svg { color:#cf9526; }
+.t-sand { background:linear-gradient(158deg,#ffe5d8 0%,#ffbd9d 100%); }  .t-sand .home-badge svg { color:#df6d3c; }
 
-.home-footer {
-  background: #ffffff;
-  text-align: center;
-  padding: 8px 20px 40px;
-  font-size: 14px; font-weight: 600; color: #8499a3;
-}
+.home-ribbon { border-top:1px solid #e8ebe7; text-align:center; padding:22px; color:#5b6b63; font-size:13px; background:#fff; }
 
 /* About modal */
-.home-modal {
-  display: none; position: fixed; inset: 0; z-index: 60;
-  background: rgba(20,58,82,.45); align-items: center; justify-content: center; padding: 20px;
-}
-.home-modal.on { display: flex; }
-.home-modal-box {
-  background: #fff; border-radius: 18px; max-width: 460px; width: 100%;
-  padding: 30px 28px; box-shadow: 0 24px 60px rgba(20,58,82,.3); position: relative;
-}
-.home-modal-box h2 { font-family: 'Playfair Display', serif; color: var(--ocean-deep); font-size: 26px; margin: 0 0 12px; }
-.home-modal-box p { color: var(--text-mid); font-size: 14px; line-height: 1.55; margin: 0 0 10px; }
-.home-modal-close { position: absolute; top: 14px; right: 18px; font-size: 22px; color: var(--text-light); cursor: pointer; background: none; border: none; line-height: 1; }
+.home-modal { display:none; position:fixed; inset:0; z-index:60; background:rgba(19,50,78,.45); align-items:center; justify-content:center; padding:20px; }
+.home-modal.on { display:flex; }
+.home-modal-box { background:#fff; border-radius:18px; max-width:460px; width:100%; padding:30px 28px; box-shadow:0 24px 60px rgba(19,50,78,.3); position:relative; }
+.home-modal-box h2 { font-family:'Fraunces',serif; color:#13324e; font-size:26px; margin:0 0 12px; }
+.home-modal-box p { color:var(--text-mid); font-size:14px; line-height:1.55; margin:0 0 10px; }
+.home-modal-close { position:absolute; top:14px; right:18px; font-size:22px; color:var(--text-light); cursor:pointer; background:none; border:none; line-height:1; }
 
-/* responsive cards */
-@media (max-width: 1100px) { .home-cards { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 640px) {
-  .home-cards { grid-template-columns: repeat(2, 1fr); padding: 28px 16px; }
-  .home-topbar { padding: 16px 18px; }
-  .home-brand { font-size: 24px; }
-  .home-navlink { font-size: 14px; }
-  .home-cta { padding: 10px 16px; font-size: 14px; }
+@media (max-width:760px){
+  .home-topbar { padding:18px 20px; }
+  .home-nav-mid { display:none; }
+  .home-hero { margin-top:22px; }
+  .home-carousel { padding:0 14px; }
 }
 
 </style>
@@ -612,7 +569,7 @@ body::before {
 <div class="nav">
   <div class="nav-logo" onclick="goHome()" title="Back to home">
     <div>
-      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ocean-deep);letter-spacing:.04em;">Boli</div>
+      <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--ocean-deep);letter-spacing:.04em;">Boli</div>
       <div style="font-size:9px;color:var(--text-light);letter-spacing:.1em;text-transform:uppercase;margin-top:1px;">Lesson Planner &mdash; 2026</div>
     </div>
   </div>
@@ -670,145 +627,159 @@ body::before {
 
 <!-- ════════ HOME / LANDING ════════ -->
 <div class="page home-page on" id="page-home">
-  <div class="home-hero">
+  <div class="home-sky">
     <div class="home-topbar">
       <div class="home-brand" onclick="goHome()">Boli</div>
-      <div class="home-nav-spacer"></div>
-      <button class="home-navlink" onclick="openAbout()">About Us</button>
-      <button class="home-navlink" id="home-login-link" onclick="openAuth('login')">Log in</button>
-      <button class="home-cta" id="home-cta-btn" onclick="homeGetStarted()">Get started &rarr;</button>
+      <div class="home-nav-mid">
+        <button class="home-navlink" onclick="openAbout()">About Us</button>
+      </div>
+      <div class="home-nav-right">
+        <button class="home-login" id="home-login-link" onclick="openAuth('login')">Log in</button>
+        <button class="home-cta" id="home-cta-btn" onclick="homeGetStarted()">Get started &rarr;</button>
+      </div>
     </div>
 
-    <div class="home-hero-text">
+    <header class="home-hero">
       <h1>Ready to Teach in Minutes</h1>
       <p>AI lesson planning aligned to the Maldives National Curriculum &mdash; schemes, checklists, assessments and report cards, all in one place.</p>
-    </div>
+    </header>
 
-    <div class="home-scene" aria-hidden="true">
-      <svg viewBox="0 0 1200 360" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#a9d3e8"/>
-            <stop offset="1" stop-color="#d6ecf3"/>
-          </linearGradient>
-        </defs>
-        <!-- green wave band -->
-        <path d="M0,42 C180,12 320,12 480,34 C660,58 760,58 920,30 C1040,10 1130,18 1200,30 L1200,0 L0,0 Z" fill="#2f7d4f"/>
-        <path d="M0,42 C180,12 320,12 480,34 C660,58 760,58 920,30 C1040,10 1130,18 1200,30 L1200,70 L0,70 Z" fill="url(#water)"/>
-        <!-- water down to sand -->
-        <rect x="0" y="60" width="1200" height="210" fill="url(#water)"/>
-        <!-- sand -->
-        <path d="M0,250 C220,232 360,236 520,244 C760,256 900,238 1200,250 L1200,360 L0,360 Z" fill="#e6d6b0"/>
-        <path d="M0,250 C220,232 360,236 520,244 C760,256 900,238 1200,250 L1200,262 L0,262 Z" fill="#dcc99c" opacity=".6"/>
-
-        <!-- LEFT: dhoni / hammock -->
-        <g transform="translate(70,210)">
-          <path d="M0,18 Q90,70 180,18" fill="none" stroke="#7a5c3a" stroke-width="7" stroke-linecap="round"/>
-          <line x1="2" y1="0" x2="6" y2="20" stroke="#7a5c3a" stroke-width="4" stroke-linecap="round"/>
-          <line x1="178" y1="0" x2="174" y2="20" stroke="#7a5c3a" stroke-width="4" stroke-linecap="round"/>
-        </g>
-
-        <!-- kite -->
-        <g transform="translate(300,70)">
-          <path d="M40,0 L70,46 L40,96 L10,46 Z" fill="#e0453a"/>
-          <path d="M40,0 L40,96 M10,46 L70,46" stroke="#b8362c" stroke-width="2"/>
-          <path d="M40,96 q-6,14 4,24 q-10,6 -2,20" fill="none" stroke="#cf5a4a" stroke-width="2"/>
-          <line x1="40" y1="96" x2="-60" y2="186" stroke="#9aa6ab" stroke-width="1.5"/>
-        </g>
-        <!-- kite child (small, standing) -->
-        <g transform="translate(232,232)">
-          <circle cx="8" cy="0" r="9" fill="#20303a"/>
-          <rect x="2" y="9" width="12" height="22" rx="5" fill="#22303a"/>
-          <line x1="14" y1="14" x2="30" y2="6" stroke="#22303a" stroke-width="4" stroke-linecap="round"/>
-          <line x1="3" y1="31" x2="0" y2="44" stroke="#22303a" stroke-width="4" stroke-linecap="round"/>
-          <line x1="12" y1="31" x2="14" y2="44" stroke="#22303a" stroke-width="4" stroke-linecap="round"/>
-        </g>
-
-        <!-- CENTER: two standing kids -->
-        <g transform="translate(560,196)">
-          <!-- teal -->
-          <circle cx="0" cy="0" r="11" fill="#1f2d33"/>
-          <path d="M-9,-6 a9,9 0 0 1 18,0 z" fill="#0e1a20"/>
-          <path d="M-12,12 L12,12 L8,54 L-8,54 Z" fill="#2f8f86"/>
-          <line x1="-10" y1="18" x2="-18" y2="40" stroke="#1f2d33" stroke-width="5" stroke-linecap="round"/>
-          <line x1="10" y1="18" x2="18" y2="40" stroke="#1f2d33" stroke-width="5" stroke-linecap="round"/>
-        </g>
-        <g transform="translate(600,198)">
-          <!-- orange -->
-          <circle cx="0" cy="0" r="11" fill="#1f2d33"/>
-          <path d="M-9,-6 a9,9 0 0 1 18,0 z" fill="#0e1a20"/>
-          <path d="M-12,12 L12,12 L8,52 L-8,52 Z" fill="#e07a2e"/>
-          <line x1="-10" y1="18" x2="-18" y2="38" stroke="#1f2d33" stroke-width="5" stroke-linecap="round"/>
-          <line x1="10" y1="18" x2="18" y2="38" stroke="#1f2d33" stroke-width="5" stroke-linecap="round"/>
-        </g>
-
-        <!-- sandcastle + crouching kid -->
-        <g transform="translate(672,232)">
-          <rect x="-2" y="6" width="34" height="18" fill="#d8b873"/>
-          <rect x="0" y="0" width="8" height="8" fill="#d8b873"/>
-          <rect x="22" y="0" width="8" height="8" fill="#d8b873"/>
-          <path d="M-2,6 h34 M15,6 v18" stroke="#c2a25f" stroke-width="1.5"/>
-        </g>
-        <g transform="translate(640,224)">
-          <circle cx="0" cy="0" r="10" fill="#1f2d33"/>
-          <path d="M-11,16 q11,-10 22,0 l-2,18 l-18,0 z" fill="#7a4f9e"/>
-          <line x1="9" y1="20" x2="22" y2="26" stroke="#1f2d33" stroke-width="4" stroke-linecap="round"/>
-        </g>
-
-        <!-- RIGHT: two seated kids + fishing rod -->
-        <g transform="translate(960,224)">
-          <circle cx="0" cy="0" r="11" fill="#1f2d33"/>
-          <path d="M-13,14 q13,-8 26,0 l-3,22 l-20,0 z" fill="#243038"/>
-        </g>
-        <g transform="translate(1010,222)">
-          <circle cx="0" cy="0" r="11" fill="#1f2d33"/>
-          <path d="M-13,14 q13,-8 26,0 l-3,24 l-20,0 z" fill="#7a2f3a"/>
-          <!-- fishing rod -->
-          <line x1="8" y1="10" x2="120" y2="-70" stroke="#7a5c3a" stroke-width="3" stroke-linecap="round"/>
-          <line x1="120" y1="-70" x2="118" y2="-30" stroke="#9aa6ab" stroke-width="1"/>
-          <circle cx="118" cy="-28" r="4" fill="#e0453a"/>
-        </g>
-      </svg>
-    </div>
+    <svg class="home-treeline" viewBox="0 0 1440 38" preserveAspectRatio="none" fill="#2f6b46" aria-hidden="true">
+      <path d="M0,38 L0,20 Q60,8 120,16 Q190,26 260,14 Q330,4 400,16 Q470,28 540,14 Q610,4 680,16 Q750,28 820,14 Q890,4 960,16 Q1030,28 1100,14 Q1170,4 1240,16 Q1310,26 1380,16 Q1410,12 1440,18 L1440,38 Z"/>
+    </svg>
+    <svg class="home-boat" viewBox="0 0 130 72" aria-hidden="true">
+      <path d="M12,30 Q40,48 65,48 Q92,48 118,26 Q94,62 65,62 Q34,62 12,30 Z" fill="#6f4a28"/>
+      <path d="M12,30 Q40,48 65,48 Q92,48 118,26" fill="none" stroke="#1f7a86" stroke-width="4" stroke-linecap="round"/>
+      <path d="M16,33 Q42,45 65,45 Q90,45 114,29" fill="none" stroke="#eaf4f3" stroke-width="2" stroke-linecap="round"/>
+      <path d="M118,26 Q124,18 126,9" fill="none" stroke="#6f4a28" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M12,30 Q8,23 7,16" fill="none" stroke="#6f4a28" stroke-width="3.4" stroke-linecap="round"/>
+      <line x1="55" y1="47" x2="55" y2="40" stroke="#5a3c20" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="80" y1="46" x2="80" y2="39" stroke="#5a3c20" stroke-width="2.2" stroke-linecap="round"/>
+      <ellipse cx="64" cy="67" rx="48" ry="3.4" fill="#1f5a66" opacity="0.16"/>
+    </svg>
+    <svg class="home-people" viewBox="0 0 1000 340" aria-hidden="true">
+      <g fill="#000" opacity="0.10">
+        <ellipse cx="300" cy="316" rx="11" ry="3.5"/>
+        <ellipse cx="430" cy="316" rx="16" ry="4"/>
+        <ellipse cx="468" cy="316" rx="12" ry="3.5"/>
+        <ellipse cx="530" cy="314" rx="22" ry="4"/>
+        <ellipse cx="558" cy="312" rx="13" ry="3.5"/>
+        <ellipse cx="828" cy="312" rx="12" ry="3.5"/>
+        <ellipse cx="860" cy="316" rx="26" ry="5"/>
+        <ellipse cx="915" cy="316" rx="26" ry="5"/>
+      </g>
+      <!-- boy flying the kite -->
+      <path d="M296,314 L298,300 M304,314 L302,300" stroke="#2a3550" stroke-width="3" stroke-linecap="round"/>
+      <path d="M295,302 L305,302 L305,293 L295,293 Z" fill="#2a3550"/>
+      <path d="M294,294 L296,272 L304,272 L306,294 Z" fill="#eef2f0"/>
+      <ellipse cx="300" cy="265" rx="7" ry="8" fill="#2a2118"/>
+      <path d="M297,274 L288,258" stroke="#2a2118" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M288,258 Q196,196 120,150" stroke="#9aa3a0" stroke-width="1" fill="none"/>
+      <polygon points="120,130 138,154 120,178 102,154" fill="#d94f4f"/>
+      <polygon points="120,130 120,178 102,154" fill="#b83b3b"/>
+      <path d="M120,178 q7,7 0,14 q-7,7 0,14 q7,7 0,14" stroke="#d94f4f" stroke-width="2" fill="none"/>
+      <!-- daughter 12 -->
+      <path d="M421,314 L426,228 L436,228 L441,314 Z" fill="#2f8f86"/>
+      <ellipse cx="430" cy="212" rx="9" ry="11" fill="#281d14"/>
+      <path d="M439,210 Q447,214 443,228 Q439,229 436,226 Z" fill="#281d14"/>
+      <!-- daughter 8 with spade -->
+      <path d="M476,250 L486,262" stroke="#e07a3c" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M486,262 L492,273" stroke="#6f4a28" stroke-width="1.8" stroke-linecap="round"/>
+      <polygon points="489,272 495,272 492,279" fill="#9a9a9a"/>
+      <path d="M460,314 L464,232 L474,232 L478,314 Z" fill="#e07a3c"/>
+      <ellipse cx="468" cy="214" rx="8.5" ry="10" fill="#281d14"/>
+      <path d="M459,212 Q450,214 452,226 Q456,227 460,220 Z" fill="#281d14"/>
+      <path d="M477,212 Q486,214 484,226 Q480,227 476,220 Z" fill="#281d14"/>
+      <!-- sandcastle + shells -->
+      <path d="M512,312 L516,300 L544,300 L548,312 Z" fill="#d8c39a"/>
+      <path d="M518,300 L518,290 L525,290 L525,300 Z" fill="#d8c39a"/>
+      <path d="M537,300 L537,288 L544,288 L544,300 Z" fill="#d8c39a"/>
+      <path d="M540,288 L540,279" stroke="#6f4a28" stroke-width="1.4" stroke-linecap="round"/>
+      <polygon points="540,279 549,282 540,285" fill="#d94f4f"/>
+      <g fill="#f0e6d2" stroke="#cdbf9a" stroke-width="0.6">
+        <ellipse cx="506" cy="309" rx="2.2" ry="1.6"/>
+        <ellipse cx="551" cy="310" rx="2.2" ry="1.6"/>
+      </g>
+      <!-- girl crouching at sandcastle -->
+      <path d="M550,290 L538,300" stroke="#281d14" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M549,300 Q553,276 563,276 Q572,280 568,300 Z" fill="#8a6fb0"/>
+      <ellipse cx="558" cy="268" rx="8" ry="9" fill="#281d14"/>
+      <path d="M550,264 Q541,266 543,277 Q547,278 551,272 Z" fill="#281d14"/>
+      <path d="M566,264 Q575,266 573,277 Q569,278 565,272 Z" fill="#281d14"/>
+      <!-- toddler with bucket -->
+      <ellipse cx="828" cy="286" rx="7" ry="7" fill="#3a2a1c"/>
+      <path d="M821,304 Q828,290 835,304 Z" fill="#7fbf6a"/>
+      <path d="M832,298 L820,307" stroke="#3a2a1c" stroke-width="2" stroke-linecap="round"/>
+      <path d="M812,302 L824,302 L822,312 L814,312 Z" fill="#d94f4f"/>
+      <path d="M812,302 Q818,295 824,302" stroke="#a83838" stroke-width="1.2" fill="none"/>
+      <g fill="#f0e6d2" stroke="#cdbf9a" stroke-width="0.6">
+        <ellipse cx="818" cy="306" rx="1.8" ry="1.3"/>
+        <ellipse cx="806" cy="309" rx="2" ry="1.5"/>
+        <ellipse cx="802" cy="311" rx="1.8" ry="1.4"/>
+      </g>
+      <!-- mother (abaya + hijab), seated -->
+      <path d="M848,288 L836,298" stroke="#16161c" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M834,314 Q838,272 860,270 Q882,272 886,314 Z" fill="#1b1b22"/>
+      <path d="M848,264 Q860,244 872,264 Q875,278 870,288 L850,288 Q845,278 848,264 Z" fill="#16161c"/>
+      <!-- sister (abaya + hijab), seated, fishing -->
+      <path d="M930,284 L986,232" stroke="#6f4a28" stroke-width="3" stroke-linecap="round"/>
+      <path d="M986,232 L992,256" stroke="#5b6b63" stroke-width="1.2"/>
+      <circle cx="992" cy="258" r="2.2" fill="#d94f4f"/>
+      <path d="M889,314 Q893,272 915,270 Q937,272 941,314 Z" fill="#23232b"/>
+      <path d="M903,264 Q915,244 927,264 Q930,278 925,288 L905,288 Q900,278 903,264 Z" fill="#7a2f3a"/>
+    </svg>
+    <svg class="home-silhouette" viewBox="0 0 1440 150" preserveAspectRatio="none" fill="#e7d7b6" aria-hidden="true">
+      <path d="M0,150 L0,96 Q220,76 480,88 Q760,102 1040,80 Q1250,66 1440,86 L1440,150 Z"/>
+    </svg>
   </div>
 
-  <!-- feature cards -->
-  <div class="home-cards">
-    <div class="home-card hc-lesson" onclick="openTool('generate')">
-      <div class="ic" style="color:var(--c-lesson-ic)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></div>
-      <h3>Lesson Plan</h3><p>Generate full lesson plans in minutes</p>
-    </div>
-    <div class="home-card hc-scheme" onclick="openTool('schemes')">
-      <div class="ic" style="color:var(--c-scheme-ic)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div>
-      <h3>Scheme</h3><p>Build a full term scheme of work</p>
-    </div>
-    <div class="home-card hc-check" onclick="openTool('checklists')">
-      <div class="ic" style="color:var(--c-check-ic)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-      <h3>Checklists</h3><p>Outcome checklists for any class</p>
-    </div>
-    <div class="home-card hc-report" onclick="openTool('reportcards')">
-      <div class="ic" style="color:var(--c-report-ic)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/></svg></div>
-      <h3>Report Cards</h3><p>Write report comments fast</p>
-    </div>
-    <div class="home-card hc-assess" onclick="openTool('assessment')">
-      <div class="ic" style="color:var(--c-assess-ic)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6a2 2 0 0 1 2 2v1h1a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h1V4a2 2 0 0 1 2-2z"/><path d="M9 13l2 2 4-4"/></svg></div>
-      <h3>Assessment</h3><p>Create assessments from outcomes</p>
-    </div>
-    <div class="home-card hc-cal" onclick="openTool('calendar')">
-      <div class="ic" style="color:var(--c-cal-ic)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-      <h3>Calendar</h3><p>Plan around the school term</p>
-    </div>
-    <div class="home-card hc-tmpl" onclick="openTool('templates')">
-      <div class="ic" style="color:var(--c-tmpl-ic)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div>
-      <h3>Templates</h3><p>Apply your school's own format</p>
-    </div>
-    <div class="home-card hc-hist" onclick="openTool('history')">
-      <div class="ic" style="color:var(--c-hist-ic)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg></div>
-      <h3>History</h3><p>Find everything you've made</p>
-    </div>
-  </div>
+  <section class="home-carousel" aria-label="Tools">
+    <div class="home-track">
 
-  <div class="home-footer">Boli &middot; AI Lesson Planner for Maldivian Teachers &middot; prototype</div>
+      <article class="home-card t-blue" onclick="openTool('generate')">
+        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h11l5 5v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v5h5"/><path d="M7 13h8M7 17h6"/></svg></div>
+        <h3>Lesson Plan</h3><p>Generate full lesson plans in minutes</p>
+      </article>
+
+      <article class="home-card t-mint" onclick="openTool('schemes')">
+        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></svg></div>
+        <h3>Scheme</h3><p>Build a full term scheme of work</p>
+      </article>
+
+      <article class="home-card t-lilac" onclick="openTool('checklists')">
+        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l2 2 4-4"/><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 16h4"/></svg></div>
+        <h3>Checklists</h3><p>Outcome checklists for any class</p>
+      </article>
+
+      <article class="home-card t-lav" onclick="openTool('reportcards')">
+        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></svg></div>
+        <h3>Report Cards</h3><p>Write report comments fast</p>
+      </article>
+
+      <article class="home-card t-green" onclick="openTool('assessment')">
+        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 11h6"/></svg></div>
+        <h3>Assessment</h3><p>Create assessments from outcomes</p>
+      </article>
+
+      <article class="home-card t-peach" onclick="openTool('calendar')">
+        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><path d="M8 14h2M14 14h2"/></svg></div>
+        <h3>Calendar</h3><p>Plan around the school term</p>
+      </article>
+
+      <article class="home-card t-rose" onclick="openTool('templates')">
+        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 8h18M8 8v13"/></svg></div>
+        <h3>Templates</h3><p>Apply your school's own format</p>
+      </article>
+
+      <article class="home-card t-sand" onclick="openTool('history')">
+        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 8v4l3 2"/></svg></div>
+        <h3>History</h3><p>Find everything you've made</p>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="home-ribbon">Boli &middot; AI Lesson Planner for Maldivian Teachers &middot; prototype</div>
 </div>
 
 <!-- About modal -->
