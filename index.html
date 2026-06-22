@@ -75,35 +75,23 @@ body::before {
 }
 
 /* ── NAV ───────────────────────────────────────────────────────── */
+/* ── App bar (slim brand/user row + card menu row) ── */
+#appbar { position: relative; z-index: 10; background: #fff; }
+#appbar.hidden { display: none; }
+
 .nav {
   background: #ffffff;
   display: flex;
   align-items: center;
-  padding: 0 18px;
-  height: 60px;
-  overflow-x: auto;
+  padding: 12px clamp(16px,3vw,28px) 10px;
   gap: 0;
   position: relative;
-  z-index: 10;
-  border-bottom: 1px solid #e6edf1;
-  box-shadow: 0 2px 14px rgba(20,58,82,.06);
 }
-.nav.hidden { display: none; }
-
-/* subtle accent at bottom of nav */
-.nav::after {
-  content: '';
-  position: absolute;
-  bottom: -1px; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(to right, var(--ocean-light), var(--leaf), var(--coral), var(--ocean-light));
-  opacity: .5;
-}
+.nav-spacer { flex: 1; }
 
 .nav-logo {
   display: flex; align-items: center; gap: 9px;
-  margin-right: 22px; flex-shrink: 0;
-  cursor: pointer;
+  flex-shrink: 0; cursor: pointer;
 }
 .nav-logo img { height: 32px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(20,58,82,.1); }
 .nav-logo span {
@@ -113,20 +101,59 @@ body::before {
   letter-spacing: .02em;
 }
 
-.tab {
-  padding: 0 13px; height: 60px;
-  display: flex; align-items: center;
-  font-size: 12px; font-weight: 700;
-  color: var(--text-mid);
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  white-space: nowrap; flex-shrink: 0;
-  user-select: none;
-  transition: color .2s, border-color .2s;
-  letter-spacing: .03em;
+/* menu row of card tabs */
+.nav-menu {
+  display: flex; align-items: stretch; gap: 10px;
+  padding: 4px clamp(16px,3vw,28px) 16px;
+  overflow-x: auto;
+  border-bottom: 1px solid #e9eef1;
+  position: relative;
 }
-.tab:hover { color: var(--ocean-deep); }
-.tab.on { color: var(--ocean-deep); border-bottom-color: var(--leaf-deep); }
+.nav-menu::-webkit-scrollbar { height: 6px; }
+.nav-menu::-webkit-scrollbar-thumb { background: #d8e1e6; border-radius: 6px; }
+.nav-menu::after {
+  content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 3px;
+  background: linear-gradient(to right, var(--ocean-light), var(--leaf), var(--coral), var(--ocean-light));
+  opacity: .45;
+}
+
+.tab {
+  flex: 1 0 150px; min-width: 150px;
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1.5px solid #e6edf1;
+  border-radius: 14px;
+  cursor: pointer; user-select: none;
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+}
+.tab:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(20,58,82,.12); border-color: #d4e6ee; }
+.tab .tab-ic {
+  width: 38px; height: 38px; flex-shrink: 0;
+  border-radius: 11px; display: flex; align-items: center; justify-content: center;
+  background: rgba(20,58,82,.05);
+}
+.tab .tab-ic svg { width: 19px; height: 19px; }
+.tab .tab-label {
+  font-family: 'Fraunces', serif;
+  font-size: 16px; font-weight: 700; line-height: 1.1;
+  color: var(--ocean-deep); letter-spacing: -.2px;
+  white-space: nowrap;
+}
+.tab.on {
+  background: var(--ocean-pale);
+  border-color: var(--leaf-deep);
+  box-shadow: 0 6px 18px rgba(31,158,90,.14);
+}
+.tab.on .tab-ic { background: rgba(31,158,90,.14); }
+
+@media (max-width: 760px) {
+  .tab { flex: 0 0 auto; min-width: auto; padding: 12px 14px; }
+  .tab .tab-label { font-size: 15px; }
+  .nav { padding: 12px 14px 8px; }
+  .user-plan, .usage-pill { display: none; }
+}
+
 
 /* ── PAGES ─────────────────────────────────────────────────────── */
 .page { display: none; padding: 22px 20px; max-width: 980px; margin: 0 auto; position: relative; z-index: 1; }
@@ -627,30 +654,60 @@ body::before {
 </style>
 </head>
 <body>
-<div class="nav">
-  <div class="nav-logo" onclick="goHome()" title="Back to home">
-    <div>
-      <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--ocean-deep);letter-spacing:.04em;">Boli</div>
-      <div style="font-size:9px;color:var(--text-light);letter-spacing:.1em;text-transform:uppercase;margin-top:1px;">Lesson Planner &mdash; 2026</div>
+<div id="appbar">
+  <div class="nav">
+    <div class="nav-logo" onclick="goHome()" title="Back to home">
+      <div>
+        <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--ocean-deep);letter-spacing:.04em;">Boli</div>
+        <div style="font-size:9px;color:var(--text-light);letter-spacing:.1em;text-transform:uppercase;margin-top:1px;">Lesson Planner &mdash; 2026</div>
+      </div>
+    </div>
+    <div class="nav-spacer"></div>
+    <!-- User bar (shown when logged in) -->
+    <div class="user-bar" id="user-bar" style="display:none;">
+      <div class="user-avatar" id="user-avatar">?</div>
+      <div>
+        <div class="user-name" id="user-name-display">-</div>
+        <div class="user-plan" id="user-plan-display">free</div>
+      </div>
+      <div class="usage-pill" id="usage-pill">0/10</div>
+      <button class="logout-btn" onclick="doLogout()">Sign out</button>
     </div>
   </div>
-  <div class="tab on" data-page="generate">✏️ Lesson Plan</div>
-  <div class="tab" data-page="schemes">📋 Schemes</div>
-  <div class="tab" data-page="checklists">✅ Checklists</div>
-  <div class="tab" data-page="reportcards">👤 Report Cards</div>
-  <div class="tab" data-page="assessment">📝 Assessment</div>
-  <div class="tab" data-page="calendar">🌊 Calendar</div>
-  <div class="tab" data-page="templates">📄 Templates</div>
-  <div class="tab" data-page="history">📂 History</div>
-  <!-- User bar (shown when logged in) -->
-  <div class="user-bar" id="user-bar" style="display:none;">
-    <div class="user-avatar" id="user-avatar">?</div>
-    <div>
-      <div class="user-name" id="user-name-display">-</div>
-      <div class="user-plan" id="user-plan-display">free</div>
+
+  <div class="nav-menu">
+    <div class="tab on" data-page="generate">
+      <span class="tab-ic" style="color:#0c8a86"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h11l5 5v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v5h5"/><path d="M7 13h8M7 17h6"/></svg></span>
+      <span class="tab-label">Lesson Plan</span>
     </div>
-    <div class="usage-pill" id="usage-pill">0/10</div>
-    <button class="logout-btn" onclick="doLogout()">Sign out</button>
+    <div class="tab" data-page="schemes">
+      <span class="tab-ic" style="color:#2f7fc2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></svg></span>
+      <span class="tab-label">Scheme</span>
+    </div>
+    <div class="tab" data-page="checklists">
+      <span class="tab-ic" style="color:#5a8a2c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l2 2 4-4"/><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 16h4"/></svg></span>
+      <span class="tab-label">Checklists</span>
+    </div>
+    <div class="tab" data-page="reportcards">
+      <span class="tab-ic" style="color:#a9802f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></svg></span>
+      <span class="tab-label">Report Cards</span>
+    </div>
+    <div class="tab" data-page="assessment">
+      <span class="tab-ic" style="color:#bf3b2c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 11h6"/></svg></span>
+      <span class="tab-label">Assessment</span>
+    </div>
+    <div class="tab" data-page="calendar">
+      <span class="tab-ic" style="color:#b07d12"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></span>
+      <span class="tab-label">Calendar</span>
+    </div>
+    <div class="tab" data-page="templates">
+      <span class="tab-ic" style="color:#cf9526"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 8h18M8 8v13"/></svg></span>
+      <span class="tab-label">Templates</span>
+    </div>
+    <div class="tab" data-page="history">
+      <span class="tab-ic" style="color:#df6d3c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 8v4l3 2"/></svg></span>
+      <span class="tab-label">History</span>
+    </div>
   </div>
 </div>
 
@@ -1386,7 +1443,7 @@ async function callAPI(key,prompt,maxTokens) {
 
 document.addEventListener("DOMContentLoaded", function() {
   // Start on the landing page with the tool nav hidden
-  var _nav = document.querySelector('.nav'); if(_nav) _nav.classList.add('hidden');
+  var _nav = document.getElementById('appbar'); if(_nav) _nav.classList.add('hidden');
   // Logo
   // logo removed
 
@@ -2131,7 +2188,7 @@ function onAuthSuccess(token, user) {
 
 /* ── Landing / navigation helpers ── */
 var pendingTool = null;
-function navEl(){ return document.querySelector('.nav'); }
+function navEl(){ return document.getElementById('appbar'); }
 function showAppNav(){ var n=navEl(); if(n) n.classList.remove('hidden'); }
 function hideAppNav(){ var n=navEl(); if(n) n.classList.add('hidden'); }
 
