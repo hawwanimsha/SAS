@@ -367,15 +367,19 @@ body::before {
 /* ── AUTH OVERLAY ──────────────────────────────────────────────── */
 .auth-overlay {
   position: fixed; inset: 0; z-index: 1000;
-  background: linear-gradient(135deg, var(--ocean-deep) 0%, #0d3d4d 40%, #1a2e42 100%);
+  background: linear-gradient(180deg,#a6c8e6 0%,#bcdcea 45%,#a9d2e3 70%,#e7d7b6 100%);
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
 }
 .auth-box {
-  background: var(--ivory); border-radius: 18px;
-  padding: 36px 32px; width: 100%; max-width: 420px;
-  box-shadow: 0 24px 60px rgba(0,0,0,.4);
-  animation: fadeUp .4s ease;
+  background: var(--ivory); border-radius: 20px;
+  padding: 38px 32px 32px; width: 100%; max-width: 420px;
+  box-shadow: 0 28px 70px rgba(19,50,78,.32);
+  animation: fadeUp .4s ease; position: relative; overflow: hidden;
+}
+.auth-box::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+  background: linear-gradient(to right, var(--ocean-light), var(--leaf), var(--coral));
 }
 .auth-logo {
   text-align: center; margin-bottom: 28px;
@@ -402,10 +406,10 @@ body::before {
 .auth-field { margin-bottom: 14px; }
 .auth-field label { display: block; font-size: 10px; font-weight: 800; color: var(--ocean-mid); text-transform: uppercase; letter-spacing: .09em; margin-bottom: 5px; }
 .auth-field input { width: 100%; border: 1.5px solid var(--sand-dark); border-radius: 8px; padding: 11px 13px; font-size: 14px; font-family: 'Inter', sans-serif; color: var(--text-dark); background: #fff; transition: border-color .2s; }
-.auth-field input:focus { outline: none; border-color: var(--ocean-light); box-shadow: 0 0 0 3px rgba(47,170,184,.12); }
-.auth-btn { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--ocean-deep), var(--ocean-mid)); color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 800; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 4px; transition: filter .15s, transform .15s; }
-.auth-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
-.auth-btn:disabled { background: #b0c4cc; cursor: not-allowed; transform: none; }
+.auth-field input:focus { outline: none; border-color: var(--leaf-deep); box-shadow: 0 0 0 3px rgba(31,158,90,.14); }
+.auth-btn { width: 100%; padding: 14px; background: var(--leaf); color: #14361a; border: none; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 4px; box-shadow: 0 6px 18px rgba(126,217,87,.35); transition: filter .15s, transform .15s, box-shadow .15s; }
+.auth-btn:hover { filter: brightness(1.04); transform: translateY(-1px); box-shadow: 0 10px 26px rgba(126,217,87,.45); }
+.auth-btn:disabled { background: #cfe0c4; color: #6b8060; cursor: not-allowed; transform: none; box-shadow: none; }
 .auth-err { background: var(--coral-light); border: 1px solid rgba(232,98,74,.4); color: #8a2a1a; border-radius: 8px; padding: 10px 13px; font-size: 13px; font-weight: 600; margin-bottom: 14px; display: none; }
 .auth-demo { text-align: center; margin-top: 16px; font-size: 12px; color: var(--text-light); }
 .auth-demo a { color: var(--ocean-mid); cursor: pointer; font-weight: 700; text-decoration: none; }
@@ -472,81 +476,132 @@ body::before {
 }
 
 /* ════════════════════════════════════════════════════════════════
-   LANDING / HOME PAGE  (calm lagoon prototype)
+   LANDING / HOME PAGE  (full-page, modern, Maldives lagoon)
    ════════════════════════════════════════════════════════════════ */
-.home-page { display:none; max-width:none; margin:0; padding:0; font-family:'Inter',sans-serif; }
-.home-page.on { display:block; animation:fadeUp .3s ease; }
+.home-page { display:none; max-width:none; margin:0; padding:0; font-family:'Inter',sans-serif; background:#fff; }
+.home-page.on { display:flex; flex-direction:column; min-height:100vh; animation:fadeUp .3s ease; }
 
-/* sky / lagoon */
-.home-sky {
-  position:relative; overflow:hidden;
-  background:linear-gradient(180deg,#a6c8e6 0%,#c9e0ef 38%,#bcdcea 48%,#a9d2e3 66%,#cfe7ec 82%,#e7d7b6 100%);
-  padding-bottom:150px;
+/* ---- header ---- */
+.home-header {
+  position:absolute; top:0; left:0; right:0; z-index:5;
+  display:flex; align-items:center; gap:24px;
+  padding:22px clamp(20px,4vw,56px);
+  max-width:1320px; margin:0 auto;
 }
-
-/* top bar over the sky */
-.home-topbar {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:22px 40px; max-width:1280px; margin:0 auto; position:relative; z-index:4;
-}
-.home-brand { font-family:'Fraunces',serif; font-weight:700; font-size:24px; letter-spacing:-.5px; color:#16344e; cursor:pointer; }
-.home-nav-mid { display:flex; gap:34px; align-items:center; }
-.home-navlink { color:rgba(20,42,64,.82); background:none; border:none; font-family:'Inter',sans-serif; font-weight:600; font-size:15px; cursor:pointer; }
-.home-navlink:hover { color:#16344e; }
-.home-nav-right { display:flex; align-items:center; gap:22px; }
+.home-brand { font-family:'Fraunces',serif; font-weight:700; font-size:26px; letter-spacing:-.5px; color:#16344e; cursor:pointer; flex-shrink:0; }
+.home-nav-mid { display:flex; gap:30px; align-items:center; margin-left:18px; }
+.home-navlink { color:rgba(20,42,64,.78); background:none; border:none; font-family:'Inter',sans-serif; font-weight:600; font-size:15px; cursor:pointer; padding:6px 2px; transition:color .15s; }
+.home-navlink:hover { color:var(--leaf-deep); }
+.home-nav-right { display:flex; align-items:center; gap:18px; margin-left:auto; }
+.home-user-chip { display:none; font-size:14px; font-weight:700; color:#16344e; }
 .home-login { color:#16344e; font-weight:600; font-size:15px; background:none; border:none; cursor:pointer; font-family:'Inter',sans-serif; }
 .home-login:hover { color:var(--leaf-deep); }
 .home-cta {
-  font-family:'Inter',sans-serif; font-weight:700; font-size:15px; border:none; border-radius:10px; cursor:pointer;
-  padding:12px 20px; display:inline-flex; align-items:center; gap:8px; background:#7ed957; color:#14361a;
-  transition:transform .15s ease, box-shadow .15s ease;
+  font-family:'Inter',sans-serif; font-weight:700; font-size:15px; border:none; border-radius:12px; cursor:pointer;
+  padding:12px 22px; display:inline-flex; align-items:center; gap:8px; background:var(--leaf); color:#14361a;
+  box-shadow:0 4px 14px rgba(126,217,87,.35); transition:transform .15s ease, box-shadow .15s ease, filter .15s;
 }
-.home-cta:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(126,217,87,.4); }
+.home-cta:hover { transform:translateY(-1px); box-shadow:0 8px 22px rgba(126,217,87,.45); filter:brightness(1.03); }
 
-/* hero */
-.home-hero { position:relative; z-index:2; max-width:900px; margin:40px auto 0; padding:0 24px; text-align:center; }
+/* ---- hero ---- */
+.home-sky {
+  position:relative; overflow:hidden;
+  background:linear-gradient(180deg,#a6c8e6 0%,#c9e0ef 36%,#bcdcea 47%,#a9d2e3 64%,#cfe7ec 80%,#e7d7b6 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+  min-height:clamp(640px,90vh,940px);
+  padding:clamp(120px,15vh,180px) 24px clamp(150px,20vh,230px);
+  text-align:center;
+}
+.home-hero { position:relative; z-index:3; max-width:880px; margin:0 auto; }
 .home-hero h1 {
   font-family:'Fraunces',serif; font-weight:700; color:#13324e;
-  font-size:clamp(34px,5.2vw,60px); line-height:1.05; letter-spacing:-1.2px;
-  text-shadow:0 1px 12px rgba(255,255,255,.45);
+  font-size:clamp(40px,6.4vw,84px); line-height:1.02; letter-spacing:-1.6px;
+  text-shadow:0 1px 16px rgba(255,255,255,.5);
 }
-.home-hero p { color:rgba(18,42,62,.82); font-size:clamp(15px,1.7vw,18px); max-width:560px; margin:18px auto 0; }
+.home-hero p {
+  color:rgba(18,42,62,.84); font-size:clamp(16px,1.7vw,20px); font-weight:500;
+  max-width:620px; margin:20px auto 0; line-height:1.5;
+}
+.home-hero-btns { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:30px; }
+.btn-hero {
+  font-family:'Inter',sans-serif; font-weight:700; font-size:16px; border-radius:13px; cursor:pointer;
+  padding:15px 28px; display:inline-flex; align-items:center; gap:9px; transition:transform .15s, box-shadow .15s, filter .15s; border:none;
+}
+.btn-hero-primary { background:var(--leaf); color:#14361a; box-shadow:0 6px 20px rgba(126,217,87,.4); }
+.btn-hero-primary:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(126,217,87,.5); filter:brightness(1.03); }
+.btn-hero-ghost { background:rgba(255,255,255,.72); color:#13324e; box-shadow:0 4px 14px rgba(20,50,78,.1); }
+.btn-hero-ghost:hover { transform:translateY(-2px); background:#fff; box-shadow:0 8px 22px rgba(20,50,78,.16); }
 
 /* scene layers */
-.home-treeline { position:absolute; left:0; right:0; top:44%; transform:translateY(-50%); width:100%; height:38px; z-index:1; display:block; }
-.home-boat { position:absolute; left:4%; bottom:118px; width:104px; height:auto; z-index:1; pointer-events:none; }
-.home-people { position:absolute; left:50%; transform:translateX(-50%); bottom:30px; width:min(820px,92%); height:auto; z-index:1; pointer-events:none; }
-.home-silhouette { position:absolute; left:0; right:0; bottom:-1px; width:100%; height:150px; display:block; z-index:1; }
+.home-treeline { position:absolute; left:0; right:0; bottom:clamp(150px,19vh,235px); width:100%; height:clamp(34px,5vw,58px); z-index:1; display:block; }
+.home-boat { position:absolute; left:clamp(12px,5vw,90px); bottom:clamp(96px,12vh,165px); width:clamp(80px,9vw,130px); height:auto; z-index:1; pointer-events:none; }
+.home-people { position:absolute; left:50%; transform:translateX(-50%); bottom:clamp(74px,10vh,135px); width:min(900px,86%); height:auto; z-index:1; pointer-events:none; }
+.home-silhouette { position:absolute; left:0; right:0; bottom:0; width:100%; height:clamp(120px,15vh,185px); display:block; z-index:0; }
 
-/* cards */
-.home-carousel { max-width:1180px; margin:34px auto 0; padding:0 24px; }
-.home-track { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
-.home-card {
-  flex:0 1 128px; border-radius:16px; padding:16px 12px 18px; text-align:center; cursor:pointer;
-  transition:transform .18s ease, box-shadow .18s ease; border:1px solid rgba(0,0,0,.02);
-  position:relative; isolation:isolate;
+/* ---- features ---- */
+.home-features { background:#fff; padding:clamp(48px,7vw,84px) clamp(20px,4vw,56px) clamp(40px,5vw,64px); }
+.home-features-head { max-width:760px; margin:0 auto clamp(28px,4vw,44px); text-align:center; }
+.home-eyebrow { font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--leaf-deep); }
+.home-features-head h2 { font-family:'Fraunces',serif; font-weight:700; font-size:clamp(28px,3.6vw,42px); color:#13324e; margin-top:8px; letter-spacing:-.5px; }
+.home-features-head p { color:#5b6b63; font-size:clamp(15px,1.5vw,17px); margin-top:12px; line-height:1.55; }
+
+.home-grid {
+  display:grid; gap:clamp(16px,1.6vw,22px);
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  max-width:1200px; margin:0 auto;
 }
-.home-card:hover { transform:translateY(-5px); box-shadow:0 12px 28px rgba(20,40,28,.14); }
-.home-card::before {
+.feature-card {
+  position:relative; isolation:isolate; text-align:left;
+  border-radius:20px; padding:26px 24px 28px; cursor:pointer; min-height:188px;
+  border:1px solid rgba(20,50,30,.05);
+  display:flex; flex-direction:column;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.feature-card::before {
   content:""; position:absolute; inset:0; border-radius:inherit; z-index:-1;
-  background:radial-gradient(120% 80% at 25% 12%, rgba(255,255,255,.55), rgba(255,255,255,0) 60%);
+  background:radial-gradient(120% 80% at 22% 12%, rgba(255,255,255,.6), rgba(255,255,255,0) 62%);
   mix-blend-mode:screen; pointer-events:none;
 }
-.home-badge { width:46px; height:46px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; box-shadow:0 2px 8px rgba(0,0,0,.05); }
-.home-badge svg { width:22px; height:22px; }
-.home-card h3 { font-family:'Fraunces',serif; font-weight:600; font-size:15.5px; line-height:1.15; color:#14361a; }
-.home-card p { margin-top:7px; font-size:11.5px; color:#5b6b63; line-height:1.35; }
+.feature-card:hover { transform:translateY(-6px); box-shadow:0 18px 40px rgba(20,40,28,.16); }
+.feature-badge {
+  width:46px; height:46px; border-radius:13px; background:rgba(255,255,255,.85);
+  display:flex; align-items:center; justify-content:center; margin-bottom:16px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.feature-badge svg { width:22px; height:22px; }
+.feature-card h3 { font-family:'Fraunces',serif; font-weight:700; font-size:21px; line-height:1.12; color:#14361a; letter-spacing:-.3px; }
+.feature-card p { margin-top:8px; font-size:14px; color:#52635c; line-height:1.45; flex:1; }
+.feature-arrow { margin-top:14px; font-size:15px; font-weight:700; color:#16344e; opacity:.55; transition:opacity .2s, transform .2s; }
+.feature-card:hover .feature-arrow { opacity:1; transform:translateX(3px); }
 
-.t-blue { background:linear-gradient(158deg,#d7f1ef 0%,#8fd9d2 100%); }  .t-blue .home-badge svg { color:#0c8a86; }
-.t-mint { background:linear-gradient(158deg,#dcecfb 0%,#a4d1f3 100%); }  .t-mint .home-badge svg { color:#2f7fc2; }
-.t-lilac{ background:linear-gradient(158deg,#e3efcf 0%,#b1d589 100%); }  .t-lilac .home-badge svg{ color:#5a8a2c; }
-.t-lav  { background:linear-gradient(158deg,#f5edda 0%,#e2d0a6 100%); }  .t-lav .home-badge svg  { color:#a9802f; }
-.t-green{ background:linear-gradient(158deg,#fbe1dd 0%,#ee9d90 100%); }  .t-green .home-badge svg{ color:#bf3b2c; }
-.t-peach{ background:linear-gradient(158deg,#fbeec8 0%,#f0d178 100%); }  .t-peach .home-badge svg{ color:#b07d12; }
-.t-rose { background:linear-gradient(158deg,#fde9bf 0%,#f5c563 100%); }  .t-rose .home-badge svg { color:#cf9526; }
-.t-sand { background:linear-gradient(158deg,#ffe5d8 0%,#ffbd9d 100%); }  .t-sand .home-badge svg { color:#df6d3c; }
+.t-blue { background:linear-gradient(158deg,#dff4f1 0%,#9fdcd5 100%); }  .t-blue .feature-badge svg { color:#0c8a86; }
+.t-mint { background:linear-gradient(158deg,#e4f0fc 0%,#aed5f4 100%); }  .t-mint .feature-badge svg { color:#2f7fc2; }
+.t-lilac{ background:linear-gradient(158deg,#eaf3da 0%,#bcdd97 100%); }  .t-lilac .feature-badge svg{ color:#5a8a2c; }
+.t-lav  { background:linear-gradient(158deg,#f7f0e1 0%,#e7d7af 100%); }  .t-lav .feature-badge svg  { color:#a9802f; }
+.t-green{ background:linear-gradient(158deg,#fce7e3 0%,#f2a89c 100%); }  .t-green .feature-badge svg{ color:#bf3b2c; }
+.t-peach{ background:linear-gradient(158deg,#fcf1ca 0%,#f3d985 100%); }  .t-peach .feature-badge svg{ color:#b07d12; }
+.t-rose { background:linear-gradient(158deg,#fdecc7 0%,#f6cd72 100%); }  .t-rose .feature-badge svg { color:#cf9526; }
+.t-sand { background:linear-gradient(158deg,#ffeae0 0%,#ffc6a9 100%); }  .t-sand .feature-badge svg { color:#df6d3c; }
 
-.home-ribbon { border-top:1px solid #e8ebe7; text-align:center; padding:22px; color:#5b6b63; font-size:13px; background:#fff; }
+/* ---- closing CTA + footer ---- */
+.home-closing {
+  margin:clamp(20px,3vw,32px) auto clamp(48px,6vw,72px); max-width:1100px;
+  background:linear-gradient(135deg,#13324e 0%,#1f6e7d 100%);
+  border-radius:24px; padding:clamp(36px,5vw,56px); text-align:center; color:#fff;
+}
+.home-closing h2 { font-family:'Fraunces',serif; font-weight:700; font-size:clamp(26px,3.4vw,38px); letter-spacing:-.5px; }
+.home-closing p { color:rgba(255,255,255,.82); font-size:clamp(15px,1.5vw,17px); margin-top:10px; }
+.home-closing .btn-hero-primary { margin-top:24px; }
+
+.home-footer {
+  margin-top:auto; border-top:1px solid #e8ebe7; background:#fff;
+  padding:30px clamp(20px,4vw,56px); display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
+}
+.home-footer .ft-brand { font-family:'Fraunces',serif; font-weight:700; font-size:20px; color:#16344e; }
+.home-footer .ft-text { color:#5b6b63; font-size:13px; }
+.home-footer .ft-links { display:flex; gap:20px; }
+.home-footer .ft-links button { background:none; border:none; color:#5b6b63; font-family:'Inter',sans-serif; font-size:13px; font-weight:600; cursor:pointer; }
+.home-footer .ft-links button:hover { color:var(--leaf-deep); }
 
 /* About modal */
 .home-modal { display:none; position:fixed; inset:0; z-index:60; background:rgba(19,50,78,.45); align-items:center; justify-content:center; padding:20px; }
@@ -556,12 +611,18 @@ body::before {
 .home-modal-box p { color:var(--text-mid); font-size:14px; line-height:1.55; margin:0 0 10px; }
 .home-modal-close { position:absolute; top:14px; right:18px; font-size:22px; color:var(--text-light); cursor:pointer; background:none; border:none; line-height:1; }
 
+/* ---- responsive ---- */
+@media (max-width:1080px){ .home-grid { grid-template-columns:repeat(2, minmax(0,1fr)); } }
 @media (max-width:760px){
-  .home-topbar { padding:18px 20px; }
+  .home-header { padding:16px 18px; gap:10px; }
   .home-nav-mid { display:none; }
-  .home-hero { margin-top:22px; }
-  .home-carousel { padding:0 14px; }
+  .home-brand { font-size:22px; }
+  .home-cta { padding:10px 16px; font-size:14px; }
+  .home-sky { min-height:auto; padding:96px 18px 150px; }
+  .home-hero-btns { gap:10px; }
+  .btn-hero { width:100%; justify-content:center; }
 }
+@media (max-width:480px){ .home-grid { grid-template-columns:1fr; } }
 
 </style>
 </head>
@@ -627,22 +688,31 @@ body::before {
 
 <!-- ════════ HOME / LANDING ════════ -->
 <div class="page home-page on" id="page-home">
+
+  <!-- HERO -->
   <div class="home-sky">
-    <div class="home-topbar">
+    <header class="home-header">
       <div class="home-brand" onclick="goHome()">Boli</div>
-      <div class="home-nav-mid">
+      <nav class="home-nav-mid">
+        <button class="home-navlink" onclick="goHome()">Home</button>
+        <button class="home-navlink" onclick="scrollToFeatures()">Features</button>
         <button class="home-navlink" onclick="openAbout()">About Us</button>
-      </div>
+      </nav>
       <div class="home-nav-right">
+        <span class="home-user-chip" id="home-user-chip"></span>
         <button class="home-login" id="home-login-link" onclick="openAuth('login')">Log in</button>
-        <button class="home-cta" id="home-cta-btn" onclick="homeGetStarted()">Get started &rarr;</button>
+        <button class="home-cta" id="home-cta-btn" onclick="homeGetStarted()">Start planning &rarr;</button>
+      </div>
+    </header>
+
+    <div class="home-hero">
+      <h1>Ready to Teach in Minutes</h1>
+      <p>AI-powered lesson planning aligned to the Maldives National Curriculum. Generate lesson plans, schemes of work, assessments, checklists, and report cards &mdash; all in one place.</p>
+      <div class="home-hero-btns">
+        <button class="btn-hero btn-hero-primary" onclick="homeGetStarted()">Start Planning &rarr;</button>
+        <button class="btn-hero btn-hero-ghost" onclick="scrollToFeatures()">Explore Features</button>
       </div>
     </div>
-
-    <header class="home-hero">
-      <h1>Ready to Teach in Minutes</h1>
-      <p>AI lesson planning aligned to the Maldives National Curriculum &mdash; schemes, checklists, assessments and report cards, all in one place.</p>
-    </header>
 
     <svg class="home-treeline" viewBox="0 0 1440 38" preserveAspectRatio="none" fill="#2f6b46" aria-hidden="true">
       <path d="M0,38 L0,20 Q60,8 120,16 Q190,26 260,14 Q330,4 400,16 Q470,28 540,14 Q610,4 680,16 Q750,28 820,14 Q890,4 960,16 Q1030,28 1100,14 Q1170,4 1240,16 Q1310,26 1380,16 Q1410,12 1440,18 L1440,38 Z"/>
@@ -668,7 +738,6 @@ body::before {
         <ellipse cx="860" cy="316" rx="26" ry="5"/>
         <ellipse cx="915" cy="316" rx="26" ry="5"/>
       </g>
-      <!-- boy flying the kite -->
       <path d="M296,314 L298,300 M304,314 L302,300" stroke="#2a3550" stroke-width="3" stroke-linecap="round"/>
       <path d="M295,302 L305,302 L305,293 L295,293 Z" fill="#2a3550"/>
       <path d="M294,294 L296,272 L304,272 L306,294 Z" fill="#eef2f0"/>
@@ -678,11 +747,9 @@ body::before {
       <polygon points="120,130 138,154 120,178 102,154" fill="#d94f4f"/>
       <polygon points="120,130 120,178 102,154" fill="#b83b3b"/>
       <path d="M120,178 q7,7 0,14 q-7,7 0,14 q7,7 0,14" stroke="#d94f4f" stroke-width="2" fill="none"/>
-      <!-- daughter 12 -->
       <path d="M421,314 L426,228 L436,228 L441,314 Z" fill="#2f8f86"/>
       <ellipse cx="430" cy="212" rx="9" ry="11" fill="#281d14"/>
       <path d="M439,210 Q447,214 443,228 Q439,229 436,226 Z" fill="#281d14"/>
-      <!-- daughter 8 with spade -->
       <path d="M476,250 L486,262" stroke="#e07a3c" stroke-width="2.4" stroke-linecap="round"/>
       <path d="M486,262 L492,273" stroke="#6f4a28" stroke-width="1.8" stroke-linecap="round"/>
       <polygon points="489,272 495,272 492,279" fill="#9a9a9a"/>
@@ -690,7 +757,6 @@ body::before {
       <ellipse cx="468" cy="214" rx="8.5" ry="10" fill="#281d14"/>
       <path d="M459,212 Q450,214 452,226 Q456,227 460,220 Z" fill="#281d14"/>
       <path d="M477,212 Q486,214 484,226 Q480,227 476,220 Z" fill="#281d14"/>
-      <!-- sandcastle + shells -->
       <path d="M512,312 L516,300 L544,300 L548,312 Z" fill="#d8c39a"/>
       <path d="M518,300 L518,290 L525,290 L525,300 Z" fill="#d8c39a"/>
       <path d="M537,300 L537,288 L544,288 L544,300 Z" fill="#d8c39a"/>
@@ -700,13 +766,11 @@ body::before {
         <ellipse cx="506" cy="309" rx="2.2" ry="1.6"/>
         <ellipse cx="551" cy="310" rx="2.2" ry="1.6"/>
       </g>
-      <!-- girl crouching at sandcastle -->
       <path d="M550,290 L538,300" stroke="#281d14" stroke-width="2.4" stroke-linecap="round"/>
       <path d="M549,300 Q553,276 563,276 Q572,280 568,300 Z" fill="#8a6fb0"/>
       <ellipse cx="558" cy="268" rx="8" ry="9" fill="#281d14"/>
       <path d="M550,264 Q541,266 543,277 Q547,278 551,272 Z" fill="#281d14"/>
       <path d="M566,264 Q575,266 573,277 Q569,278 565,272 Z" fill="#281d14"/>
-      <!-- toddler with bucket -->
       <ellipse cx="828" cy="286" rx="7" ry="7" fill="#3a2a1c"/>
       <path d="M821,304 Q828,290 835,304 Z" fill="#7fbf6a"/>
       <path d="M832,298 L820,307" stroke="#3a2a1c" stroke-width="2" stroke-linecap="round"/>
@@ -717,11 +781,9 @@ body::before {
         <ellipse cx="806" cy="309" rx="2" ry="1.5"/>
         <ellipse cx="802" cy="311" rx="1.8" ry="1.4"/>
       </g>
-      <!-- mother (abaya + hijab), seated -->
       <path d="M848,288 L836,298" stroke="#16161c" stroke-width="2.6" stroke-linecap="round"/>
       <path d="M834,314 Q838,272 860,270 Q882,272 886,314 Z" fill="#1b1b22"/>
       <path d="M848,264 Q860,244 872,264 Q875,278 870,288 L850,288 Q845,278 848,264 Z" fill="#16161c"/>
-      <!-- sister (abaya + hijab), seated, fishing -->
       <path d="M930,284 L986,232" stroke="#6f4a28" stroke-width="3" stroke-linecap="round"/>
       <path d="M986,232 L992,256" stroke="#5b6b63" stroke-width="1.2"/>
       <circle cx="992" cy="258" r="2.2" fill="#d94f4f"/>
@@ -733,53 +795,91 @@ body::before {
     </svg>
   </div>
 
-  <section class="home-carousel" aria-label="Tools">
-    <div class="home-track">
+  <!-- FEATURES -->
+  <section class="home-features" id="home-features">
+    <div class="home-features-head">
+      <div class="home-eyebrow">Everything in one place</div>
+      <h2>Plan a whole term, faster</h2>
+      <p>Eight teacher-friendly tools, all aligned to the Maldives National Curriculum and ready to use in your school's own format.</p>
+    </div>
+    <div class="home-grid">
 
-      <article class="home-card t-blue" onclick="openTool('generate')">
-        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h11l5 5v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v5h5"/><path d="M7 13h8M7 17h6"/></svg></div>
-        <h3>Lesson Plan</h3><p>Generate full lesson plans in minutes</p>
+      <article class="feature-card t-blue" onclick="openTool('generate')">
+        <div class="feature-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h11l5 5v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v5h5"/><path d="M7 13h8M7 17h6"/></svg></div>
+        <h3>Lesson Planner</h3>
+        <p>Generate full, ready-to-teach lesson plans in minutes.</p>
+        <span class="feature-arrow">Open &rarr;</span>
       </article>
 
-      <article class="home-card t-mint" onclick="openTool('schemes')">
-        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></svg></div>
-        <h3>Scheme</h3><p>Build a full term scheme of work</p>
+      <article class="feature-card t-mint" onclick="openTool('schemes')">
+        <div class="feature-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></svg></div>
+        <h3>Scheme of Work</h3>
+        <p>Build a complete term scheme aligned to outcomes.</p>
+        <span class="feature-arrow">Open &rarr;</span>
       </article>
 
-      <article class="home-card t-lilac" onclick="openTool('checklists')">
-        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l2 2 4-4"/><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 16h4"/></svg></div>
-        <h3>Checklists</h3><p>Outcome checklists for any class</p>
+      <article class="feature-card t-lilac" onclick="openTool('checklists')">
+        <div class="feature-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l2 2 4-4"/><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 16h4"/></svg></div>
+        <h3>Checklists</h3>
+        <p>Create outcome checklists for any class or unit.</p>
+        <span class="feature-arrow">Open &rarr;</span>
       </article>
 
-      <article class="home-card t-lav" onclick="openTool('reportcards')">
-        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></svg></div>
-        <h3>Report Cards</h3><p>Write report comments fast</p>
+      <article class="feature-card t-lav" onclick="openTool('reportcards')">
+        <div class="feature-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5"/><path d="M9 13.5L8 21l4-2 4 2-1-7.5"/></svg></div>
+        <h3>Report Cards</h3>
+        <p>Write warm, accurate report comments fast.</p>
+        <span class="feature-arrow">Open &rarr;</span>
       </article>
 
-      <article class="home-card t-green" onclick="openTool('assessment')">
-        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 11h6"/></svg></div>
-        <h3>Assessment</h3><p>Create assessments from outcomes</p>
+      <article class="feature-card t-green" onclick="openTool('assessment')">
+        <div class="feature-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 11h6"/></svg></div>
+        <h3>Assessment</h3>
+        <p>Create assessments directly from learning outcomes.</p>
+        <span class="feature-arrow">Open &rarr;</span>
       </article>
 
-      <article class="home-card t-peach" onclick="openTool('calendar')">
-        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><path d="M8 14h2M14 14h2"/></svg></div>
-        <h3>Calendar</h3><p>Plan around the school term</p>
+      <article class="feature-card t-peach" onclick="openTool('calendar')">
+        <div class="feature-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><path d="M8 14h2M14 14h2"/></svg></div>
+        <h3>Calendar</h3>
+        <p>Plan your weeks around the school term.</p>
+        <span class="feature-arrow">Open &rarr;</span>
       </article>
 
-      <article class="home-card t-rose" onclick="openTool('templates')">
-        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 8h18M8 8v13"/></svg></div>
-        <h3>Templates</h3><p>Apply your school's own format</p>
+      <article class="feature-card t-rose" onclick="openTool('templates')">
+        <div class="feature-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 8h18M8 8v13"/></svg></div>
+        <h3>Templates</h3>
+        <p>Apply your school's own document format.</p>
+        <span class="feature-arrow">Open &rarr;</span>
       </article>
 
-      <article class="home-card t-sand" onclick="openTool('history')">
-        <div class="home-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 8v4l3 2"/></svg></div>
-        <h3>History</h3><p>Find everything you've made</p>
+      <article class="feature-card t-sand" onclick="openTool('history')">
+        <div class="feature-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 8v4l3 2"/></svg></div>
+        <h3>History</h3>
+        <p>Find everything you've created, anytime.</p>
+        <span class="feature-arrow">Open &rarr;</span>
       </article>
 
     </div>
+
+    <!-- closing CTA -->
+    <div class="home-closing">
+      <h2>Ready to plan your next lesson?</h2>
+      <p>Jump straight into the planner &mdash; no setup required.</p>
+      <button class="btn-hero btn-hero-primary" onclick="homeGetStarted()">Start Planning &rarr;</button>
+    </div>
   </section>
 
-  <div class="home-ribbon">Boli &middot; AI Lesson Planner for Maldivian Teachers &middot; prototype</div>
+  <!-- FOOTER -->
+  <footer class="home-footer">
+    <div class="ft-brand">Boli</div>
+    <div class="ft-text">Boli &middot; AI Lesson Planner for Maldivian Teachers &middot; Seenu Atoll School, S. Meedhoo, Addu</div>
+    <div class="ft-links">
+      <button onclick="scrollToFeatures()">Features</button>
+      <button onclick="openAbout()">About</button>
+      <button onclick="openAuth('login')">Log in</button>
+    </div>
+  </footer>
 </div>
 
 <!-- About modal -->
@@ -1674,6 +1774,7 @@ async function schGenerateActivity() {
   var stmt=schCurrentOutcomeData.length?schCurrentOutcomeData[0].out_stmt:'';
   var checked=schGetCheckedIndicators();
   var resultDiv=document.getElementById('activity-ai-result');
+  if(!currentUser){ openAuth('login'); resultDiv.innerHTML=''; return; }
   resultDiv.innerHTML='<span class="spin"></span> Generating...';
   try {
     var prompt='Suggest a concise learning activity (2-3 sentences) for '+grade+' '+sub+'. Outcome: '+code+' '+stmt+'. Indicators: '+checked.map(function(c){return c.code;}).join(', ')+'. Use a real-world context relevant to the topic; use Maldivian context only where it fits naturally. Return ONLY the activity text, no JSON, no markdown.';
@@ -1713,6 +1814,7 @@ async function schGenerateAssessment() {
   var code=document.getElementById('s-outcome').value;
   var stmt=schCurrentOutcomeData.length?schCurrentOutcomeData[0].out_stmt:'';
   var resultDiv=document.getElementById('assess-ai-result');
+  if(!currentUser){ openAuth('login'); resultDiv.innerHTML=''; return; }
   resultDiv.innerHTML='<span class="spin"></span> Generating...';
   try {
     var prompt='Suggest a concise assessment/evaluation method (1-2 sentences) for '+grade+' '+sub+'. Outcome: '+code+' '+stmt+'. Include how to check student understanding. Return ONLY the assessment text, no JSON, no markdown.';
@@ -2057,13 +2159,17 @@ function enterTool(page){
 }
 
 function openTool(page){
-  if(currentUser){ enterTool(page); }
-  else { pendingTool = page; openAuth('login'); }
+  // Explore freely — no login wall on navigation. Login is requested only at generate/export.
+  enterTool(page);
 }
 
 function homeGetStarted(){
-  if(currentUser){ enterTool('generate'); }
-  else { pendingTool = 'generate'; openAuth('register'); }
+  enterTool('generate');
+}
+
+function scrollToFeatures(){
+  var el = document.getElementById('home-features');
+  if(el) el.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
 function openAuth(mode){
@@ -2080,13 +2186,15 @@ function closeAbout(){ document.getElementById('about-modal').classList.remove('
 function updateHomeNav(){
   var loginLink = document.getElementById('home-login-link');
   var cta = document.getElementById('home-cta-btn');
-  if(!loginLink || !cta) return;
+  var userChip = document.getElementById('home-user-chip');
   if(currentUser){
-    loginLink.style.display = 'none';
-    cta.innerHTML = 'Open planner &rarr;';
+    if(loginLink) loginLink.style.display = 'none';
+    if(cta) cta.innerHTML = 'Open planner &rarr;';
+    if(userChip){ userChip.style.display = 'inline-flex'; userChip.textContent = 'Hi, ' + (currentUser.name||'').split(' ')[0]; }
   } else {
-    loginLink.style.display = '';
-    cta.innerHTML = 'Get started &rarr;';
+    if(loginLink) loginLink.style.display = '';
+    if(cta) cta.innerHTML = 'Start planning &rarr;';
+    if(userChip){ userChip.style.display = 'none'; }
   }
 }
 
@@ -2361,6 +2469,8 @@ function renderSavedTemplates() {
 // OVERRIDE callAPI to use server key transparently
 // =====================================================================
 async function callAPI(key, prompt, maxTokens) {
+  // Explore-first: only require login at the point of generating/saving.
+  if (!currentUser) { if (typeof openAuth === 'function') openAuth('login'); throw new Error('Please log in to generate. Your inputs are kept — just log in and try again.'); }
   var headers = { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' };
   // Send auth token if logged in
   var token = localStorage.getItem('boli_token');
