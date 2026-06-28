@@ -81,6 +81,12 @@ async function extractDocx(buffer) {
   const mammoth = require('mammoth');
   return (await mammoth.extractRawText({ buffer })).value;
 }
+async function extractDocxHtml(buffer) {
+  try {
+    const mammoth = require('mammoth');
+    return (await mammoth.convertToHtml({ buffer })).value || '';
+  } catch (e) { return ''; }
+}
 async function extractPdf(buffer) {
   const pdfParse = require('pdf-parse');
   return (await pdfParse(buffer)).text;
@@ -187,7 +193,8 @@ const server = http.createServer(async (req, res) => {
       if (!fileBuffer) return jsonRes(res, 400, { error: 'No file uploaded' });
       const ext = path.extname(fileName).toLowerCase();
       let text = '';
-      if (ext === '.docx') text = await extractDocx(fileBuffer);
+      let html = '';
+      if (ext === '.docx') { text = await extractDocx(fileBuffer); html = await extractDocxHtml(fileBuffer); }
       else if (ext === '.pdf') text = await extractPdf(fileBuffer);
       else return jsonRes(res, 400, { error: 'Please upload a .docx or .pdf file' });
       if (!text || text.trim().length < 20) return jsonRes(res, 400, { error: 'Could not extract text. File may be image-only.' });
@@ -196,12 +203,30 @@ const server = http.createServer(async (req, res) => {
       let structure = { sections: [], fields: {}, format: 'Custom template', preview: text.slice(0, 300) };
       if (apiKey) {
         try {
-          const aiRes = await callAnthropic({ model: 'claude-sonnet-4-5', max_tokens: 800, messages: [{ role: 'user', content: `Analyse this lesson plan template. Return ONLY valid JSON:\n{"sections":["section1","section2"],"format":"brief style description","preview":"first 200 chars"}\n\nTemplate:\n${text.slice(0, 2000)}` }] }, apiKey);
+          // Prefer table-aware HTML context for docx so the AI sees the real layout/order.
+          const layoutCtx = (html ? ('HTML (tables preserved):\n' + html.slice(0, 6000) + '\n\n') : '') + 'PLAIN TEXT:\n' + text.slice(0, 6000);
+          const aiRes = await callAnthropic({ model: 'claude-haiku-4-5', max_tokens: 1500, messages: [{ role: 'user', content:
+            'You are analysing a school lesson-plan TEMPLATE. List every section/heading/field label IN THE EXACT ORDER it appears, using the exact wording. ' +
+            'Classify each as "meta" (a short header field that holds a single value, e.g. School, Date, Class, Subject, Week, Duration, Lesson No, Teacher, Topic, Strand, Outcome Code) ' +
+            'or "content" (a block to be filled with lesson content, e.g. Learning Outcomes, Success Criteria, Learning Experiences/Activities, Assessment, Reflection). ' +
+            'Do NOT invent sections that are not in the template, and do NOT drop any.\n\n' +
+            'Return ONLY valid JSON, no markdown:\n' +
+            '{"sections":[{"title":"<exact heading>","kind":"meta|content"}],"format":"<one-line style description>","preview":"<first ~200 chars of the template>"}\n\n' +
+            'TEMPLATE:\n' + layoutCtx
+          }] }, apiKey);
           const raw = aiRes.content[0].text.replace(/```json|```/g, '').trim();
-          structure = JSON.parse(raw);
-        } catch(e) { console.error('Template analysis error:', e.message); }
+          const parsed = JSON.parse(raw);
+          // Normalise: accept array of strings or array of {title,kind}
+          if (parsed && Array.isArray(parsed.sections)) {
+            parsed.sections = parsed.sections.map(function (s) {
+              if (typeof s === 'string') return { title: s.trim(), kind: '' };
+              return { title: String((s && (s.title || s.name)) || '').trim(), kind: (s && (s.kind || s.type)) || '' };
+            }).filter(function (s) { return s.title; });
+          }
+          structure = Object.assign({ sections: [], fields: {}, format: 'Custom template', preview: text.slice(0, 300) }, parsed || {});
+        } catch (e) { console.error('Template analysis error:', e.message); }
       }
-      return jsonRes(res, 200, { success: true, fileName, textLength: text.length, templateText: text.slice(0, 5000), structure });
+      return jsonRes(res, 200, { success: true, fileName, textLength: text.length, templateText: text.slice(0, 6000), structure });
     }
 
     // ── Static files ─────────────────────────────────────────────
