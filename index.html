@@ -11,12 +11,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Boli</title>
+<title>FARUMA</title>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 <style>
 
 /* ── Google Fonts ──────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Belleza&display=swap');
 
 /* ── Design Tokens ─────────────────────────────────────────────── */
 :root {
@@ -408,9 +408,9 @@ body::before {
   text-align: center; margin-bottom: 28px;
 }
 .auth-logo h1 {
-  font-family: 'Fraunces', serif;
-  font-size: 32px; font-weight: 700;
-  color: var(--ocean-deep); letter-spacing: .04em;
+  font-family: 'Belleza', 'Fraunces', sans-serif;
+  font-size: 34px; font-weight: 400;
+  color: var(--ocean-deep); letter-spacing: .06em;
 }
 .auth-logo p {
   font-size: 13px; color: var(--text-mid); margin-top: 4px;
@@ -505,7 +505,7 @@ body::before {
 .home-page.on { display:flex; flex-direction:column; height:100vh; overflow:hidden; animation:fadeUp .3s ease; }
 
 .home-sky {
-  position:relative; overflow:hidden; flex:0 0 auto; height:clamp(360px,50vh,560px);
+  position:relative; overflow:hidden; flex:0 0 auto; height:clamp(516px,62vh,640px);
   background:linear-gradient(180deg,#9fc9e8 0%,#bfe2ee 30%,#8fdad4 47%,#59c6c2 64%,#9fe6dd 82%,#f5f0e3 100%);
 }
 
@@ -513,7 +513,7 @@ body::before {
   display:flex; align-items:center; justify-content:space-between; gap:18px;
   padding:18px clamp(20px,4vw,44px); position:relative; z-index:4;
 }
-.home-brand { font-family:'Fraunces',serif; font-weight:700; font-size:24px; letter-spacing:-.5px; color:#16344e; cursor:pointer; }
+.home-brand { font-family:'Belleza','Fraunces',sans-serif; font-weight:400; font-size:25px; letter-spacing:1px; color:#16344e; cursor:pointer; }
 .home-nav-mid { display:flex; gap:28px; align-items:center; }
 .home-navlink { color:rgba(16,44,64,.82); background:none; border:none; font-family:'Inter',sans-serif; font-weight:600; font-size:15px; cursor:pointer; }
 .home-navlink:hover { color:#0f6f4c; }
@@ -528,10 +528,10 @@ body::before {
 }
 .home-cta:hover { transform:translateY(-1px); box-shadow:0 8px 22px rgba(126,217,87,.45); filter:brightness(1.03); }
 
-.home-hero { position:relative; z-index:3; max-width:900px; margin:clamp(4px,1.5vh,20px) auto 0; padding:0 24px; text-align:center; }
+.home-hero { position:relative; z-index:3; max-width:900px; margin:clamp(2px,0.6vh,8px) auto 0; padding:0 24px; text-align:center; }
 .home-hero h1 {
-  font-family:'Fraunces',serif; font-weight:700; color:#13324e;
-  font-size:clamp(32px,5vw,58px); line-height:1.02; letter-spacing:-1.2px;
+  font-family:'Belleza','Fraunces',sans-serif; font-weight:400; color:#13324e;
+  font-size:clamp(34px,5.4vw,62px); line-height:1.04; letter-spacing:1.5px;
   text-shadow:0 1px 14px rgba(255,255,255,.5);
 }
 .home-hero p { color:rgba(16,44,62,.86); font-size:clamp(14px,1.5vw,18px); font-weight:500; max-width:560px; margin:12px auto 0; line-height:1.4; }
@@ -543,9 +543,9 @@ body::before {
 
 .home-cards { flex:0 0 auto; background:#fff; padding:clamp(16px,2.4vh,26px) clamp(16px,3vw,40px) clamp(10px,1.5vh,16px); }
 .home-spacer { flex:1 1 auto; background:#fff; min-height:0; }
-.home-track { display:flex; flex-wrap:nowrap; gap:clamp(10px,1vw,16px); justify-content:center; max-width:1200px; margin:0 auto; overflow-x:auto; padding-bottom:4px; }
+.home-track { display:flex; flex-wrap:nowrap; gap:clamp(8px,1vw,16px); justify-content:center; align-items:stretch; width:100%; max-width:1240px; margin:0 auto; overflow:visible; padding-bottom:4px; }
 .home-card {
-  flex:0 0 138px; max-width:160px; border-radius:16px; padding:14px 12px 16px; text-align:center; cursor:pointer;
+  flex:1 1 0; min-width:0; max-width:160px; border-radius:16px; padding:14px 12px 16px; text-align:center; cursor:pointer;
   transition:transform .18s ease, box-shadow .18s ease; border:1px solid rgba(0,0,0,.02); position:relative; isolation:isolate;
 }
 .home-card:hover { transform:translateY(-5px); box-shadow:0 12px 28px rgba(20,40,28,.14); }
@@ -578,8 +578,8 @@ body::before {
   .home-nav-mid { display:none; }
   .home-brand { font-size:21px; }
   .home-cta { padding:9px 15px; font-size:14px; }
-  .home-track { justify-content:flex-start; }
-  .home-card { flex:0 0 130px; }
+  .home-track { flex-wrap:wrap; justify-content:center; }
+  .home-card { flex:1 1 110px; max-width:160px; }
 }
 
 </style>
@@ -642,7 +642,7 @@ body::before {
   <div class="auth-box" style="position:relative;">
     <button onclick="closeAuth()" title="Close" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;line-height:1;color:var(--text-light);cursor:pointer;">&times;</button>
     <div class="auth-logo">
-      <h1>🏝 Boli</h1>
+      <h1>🏝 FARUMA</h1>
       <p>AI-Powered Lesson Planner for Maldivian Teachers</p>
     </div>
     <div class="auth-tabs">
@@ -673,7 +673,7 @@ body::before {
 <div class="page home-page on" id="page-home">
   <div class="home-sky">
     <header class="home-topbar">
-      <div class="home-brand" onclick="goHome()">Boli</div>
+      <div class="home-brand" onclick="goHome()">FARUMA</div>
       <nav class="home-nav-mid">
         <button class="home-navlink" onclick="goHome()">Home</button>
         <button class="home-navlink" onclick="scrollToFeatures()">Features</button>
@@ -687,7 +687,8 @@ body::before {
     </header>
 
     <div class="home-hero">
-      <h1>Ready to Teach in Minutes</h1>
+      <h1>FARUMA</h1>
+      <p class="hero-dv" lang="dv" dir="rtl" style="font-family:'MV Faseyha','Faruma','A Faruma','MV Boli','MV Elaaf Normal',sans-serif;direction:rtl;text-align:center;white-space:nowrap;font-size:50px;line-height:1.15;font-weight:800;letter-spacing:-.5px;color:var(--ocean-deep);margin:.2rem auto .5rem;text-shadow:0 2px 14px rgba(255,255,255,.65);">ދިވެހި މުދައްރިސުންނަށް އެހީއެއް</p>
       <p>AI lesson planning aligned to the Maldives National Curriculum &mdash; schemes, checklists, assessments and report cards, all in one place.</p>
     </div>
 
@@ -800,17 +801,17 @@ body::before {
   </section>
 
   <div class="home-spacer"></div>
-  <div class="home-ribbon">Boli &middot; AI Lesson Planner for Maldivian Teachers &middot; prototype</div>
+  <div class="home-ribbon">FARUMA &middot; AI Lesson Planner for Maldivian Teachers</div>
 </div>
 
 <!-- About modal -->
 <div class="home-modal" id="about-modal">
   <div class="home-modal-box">
     <button class="home-modal-close" onclick="closeAbout()">&times;</button>
-    <h2>About Boli</h2>
-    <p>Boli is an AI-powered planning assistant built for Maldivian teachers. Every lesson plan, scheme of work, checklist, assessment and report comment is aligned to the Maldives National Curriculum.</p>
-    <p>Pick a tool, choose your grade, subject and outcomes, and Boli drafts ready-to-use material in your school's own format &mdash; so you spend less time formatting and more time teaching.</p>
-    <p style="color:var(--text-light);font-size:13px;">Seenu Atoll School &middot; S. Meedhoo, Addu</p>
+    <h2>About FARUMA</h2>
+    <p>FARUMA is an AI-powered planning assistant built for Maldivian teachers. Every lesson plan, scheme of work, checklist, assessment and report comment is aligned to the Maldives National Curriculum.</p>
+    <p>Pick a tool, choose your grade, subject and outcomes, and FARUMA drafts ready-to-use material in your school's own format &mdash; so you spend less time formatting and more time teaching.</p>
+    <p style="color:var(--text-light);font-size:13px;">AI Lesson Planner for Maldivian Teachers</p>
   </div>
 </div>
 
@@ -845,12 +846,16 @@ body::before {
   </div>
   <div class="field"><label>Outcome Statement</label><textarea id="f-outstmt" rows="2" readonly style="background:#f5f5f5;color:#555;"></textarea></div>
   <div class="g2">
-    <div class="field"><label>School Name</label><input type="text" id="f-school" placeholder="e.g. Seenu Atoll School" value=""></div>
-    <div class="field"><label>School Address</label><input type="text" id="f-address" placeholder="e.g. S. Meedhoo, Addu City"></div>
+    <div class="field"><label>School Name</label><input type="text" id="f-school" placeholder="e.g. your school name" value=""></div>
+    <div class="field"><label>School Address</label><input type="text" id="f-address" placeholder="e.g. your school address"></div>
   </div>
   <div id="active-tpl-banner" style="display:none;background:var(--ocean-pale);border:1px solid rgba(47,170,184,.3);border-radius:8px;padding:9px 14px;margin-bottom:12px;font-size:12px;color:var(--ocean-deep);font-weight:700;">
     📄 Template active: <span id="active-tpl-name"></span> &nbsp;<a href="#" onclick="showPage2('templates');return false;" style="color:var(--coral);font-size:11px;">Change</a>
   </div>
+  <div class="field"><label>Lesson Plan Format</label><select id="f-format">
+    <option value="school" selected>School grid (Subject · Strand · Teaching &amp; Learning · Reflections)</option>
+    <option value="standard">Standard (Set Induction · Main Body · Closure · Checked by)</option>
+  </select></div>
   <div class="field"><label>Lesson Activity Type</label><select id="f-activity-type">
     <option value="Standard" selected>Standard (Introduction + Activity)</option>
     <option value="5E Model">5E Model (Engage, Explore, Explain, Elaborate, Evaluate)</option>
@@ -876,7 +881,7 @@ body::before {
     <div class="field"><label class="step-label">Teacher Name</label>
       <input type="text" id="sch-teacher" placeholder="e.g. Aminath Ali"></div>
     <div class="field"><label class="step-label">School Name</label>
-      <input type="text" id="sch-school" placeholder="e.g. Seenu Atoll School"></div>
+      <input type="text" id="sch-school" placeholder="e.g. your school name"></div>
   </div>
 </div>
 
@@ -1028,8 +1033,8 @@ body::before {
 <div class="card">
   <div class="card-title">Outcome Assessment Record Sheet</div>
   <div class="g2">
-    <div class="field"><label>School Name</label><input type="text" id="cl-school" value="Seenu Atoll School"></div>
-    <div class="field"><label>School Address</label><input type="text" id="cl-address" value="Hulhudhoo-Meedhoo, Addu City"></div>
+    <div class="field"><label>School Name</label><input type="text" id="cl-school" placeholder="Your school name" value=""></div>
+    <div class="field"><label>School Address</label><input type="text" id="cl-address" placeholder="Your school address" value=""></div>
   </div>
   <div class="g2">
     <div class="field"><label>Class</label><input type="text" id="cl-class" placeholder="e.g. 5A"></div>
@@ -1476,6 +1481,7 @@ async function doGenerate() {
   setProgress("gen-prog","gen-bar",20);
 
   var hasTemplate = !!activeTemplate;
+  var fmt = (document.getElementById("f-format")||{}).value || "school";
   var prompt;
   if (hasTemplate) {
     var _tplSecs = getTemplateSections();
@@ -1506,8 +1512,8 @@ async function doGenerate() {
       + "Return ONLY valid JSON, no markdown, in EXACTLY this shape:\n"
       + '{"sections":[{"title":"<exact template section title>","content":["line 1","line 2"]}]}\n'
       + "Each content is an array of strings; a single-value field uses a one-element array. Include one object per template section, in order.";
-    } else {
-    prompt = "You are an expert primary school teacher at Boli, Maldives.\n\n"
+    } else if (fmt === "standard") {
+    prompt = "You are an expert primary school teacher in the Maldives.\n\n"
       +"Grade: "+grade+" | Subject: "+currentSub+" | Duration: "+dur+" mins\n"
       +"Week: "+(wk||"?")+", Date: "+(date||"?")+", Lesson ID: "+fname+"\n"
       +"Strand: "+strand+" | Sub-strand: "+substrand+"\n"
@@ -1538,6 +1544,34 @@ async function doGenerate() {
       +',"closure":{"teacherActivity":["Summarise"],"studentActivity":["Reflect"]}'
       +',"learningOutcomes":["'+outStmt.replace(/"/g,"'")+'"]}'
       ;
+  } else {
+    prompt = "You are an expert teacher in the Maldives writing a lesson plan in your school's official format.\n\n"
+      +"Grade: "+grade+" | Subject: "+currentSub+" | Duration: "+dur+" mins\n"
+      +"Week: "+(wk||"?")+" | Date: "+(date||"?")+" | Period/Lesson: "+fname+"\n"
+      +"Strand: "+strand+" | Sub-strand: "+substrand+"\n"
+      +"Outcome Code: "+outCode+"\nOutcome: "+outStmt+"\n"
+      +"Topic: "+topic+"\nIndicators:\n"+inds.join("\n")+"\n"
+      +(activities?"Activity ideas: "+activities+"\n":"")
+      +"Lesson activity model: "+activityType+"\n\n"
+      +"Write detailed, classroom-ready content for EACH field below. Use Bloom's progression and age-appropriate activities for "+grade+". Use real-world / Maldivian contexts only where they fit the topic naturally. The Teaching and Learning section must have four timed phases whose times add up to about "+dur+" minutes.\n\n"
+      +"Return ONLY valid JSON, no markdown:\n"
+      +'{'
+      +'"keyCompetencies":["a key competency and a sentence on how this lesson develops it"],'
+      +'"processSkill":["the process / thinking skill and how students use it in this lesson"],'
+      +'"sharedValues":["a shared value relevant to this lesson"],'
+      +'"priorKnowledge":["what students already know that this lesson builds on"],'
+      +'"resources":["a teaching material or resource","another resource"],'
+      +'"learningIntentions":["a learning intention starting with a verb"],'
+      +'"successCriteria":["a measurable success criterion"],'
+      +'"teaching":{'
+      +'"introduction":["Introduction (~5 min): what the teacher and students do"],'
+      +'"explanation":["Explanation / Inquiry Exploration (~15 min): detailed steps","key questions to ask"],'
+      +'"activity":["Activity (~12 min): what students do","Early finishers: extension task","Students who need support: scaffold"],'
+      +'"conclusion":["Conclusion (~3 min): recap and closing question"]'
+      +'},'
+      +'"assessment":["an assessment method tied to the success criteria","another assessment method"]'
+      +'}'
+      ;
   }
 
   try {
@@ -1546,6 +1580,7 @@ async function doGenerate() {
     plan.subject=currentSub; plan.grade=grade; plan.duration=dur;
     plan.week=wk; plan.lessonNo=fname; plan.date=date;
     plan.strand=strand; plan.substrand=substrand; plan.outcomeCode=outCode;
+    plan.outcomeStmt=outStmt;
     plan.topic=topic; plan.indicators=inds;
     plan.school=document.getElementById("f-school").value||"";
     plan.schoolAddress=document.getElementById("f-address").value||"";
@@ -1553,8 +1588,10 @@ async function doGenerate() {
     var blob;
     if (hasTemplate && activeTemplate) {
       blob = await buildDocxFromTemplate(plan, activeTemplate);
-    } else {
+    } else if (fmt === "standard") {
       blob = await buildDocx(plan);
+    } else {
+      blob = await buildSchoolDocx(plan);
     }
     var b64=await blobToB64(blob);
     saveHist({ts:Date.now(),sub:currentSub,grade:grade,wk:wk,fname:fname,topic:topic,date:date,b64:b64});
@@ -2574,7 +2611,7 @@ async function doChecklist(){
   var grade=document.getElementById('cl-grade').value;
   var subject=document.getElementById('cl-sub').value;
   var term=document.getElementById('cl-term').value;
-  var school=document.getElementById('cl-school').value||'Seenu Atoll School';
+  var school=document.getElementById('cl-school').value||'';
   var address=document.getElementById('cl-address').value||'';
   var cls=document.getElementById('cl-class').value||'';
   var numStudents=parseInt(document.getElementById('cl-students').value)||25;
@@ -2829,6 +2866,104 @@ async function buildDocxFromTemplate(plan, template) {
     sections:[{
       properties:{ page:{ margin:{ top:720, right:720, bottom:720, left:720 } } },
       children:[ new Table({ width:{ size:TW, type:WidthType.DXA }, borders:borders, rows:rows }) ]
+    }]
+  });
+  return await Packer.toBlob(doc);
+}
+
+
+async function buildSchoolDocx(plan) {
+  var _d = docx;
+  var Document=_d.Document, Packer=_d.Packer, Paragraph=_d.Paragraph, TextRun=_d.TextRun,
+      Table=_d.Table, TableRow=_d.TableRow, TableCell=_d.TableCell,
+      AlignmentType=_d.AlignmentType, BorderStyle=_d.BorderStyle, WidthType=_d.WidthType, ShadingType=_d.ShadingType;
+
+  var TW = 10692, COL = Math.floor(TW/5);
+  var mkB = function(){ return { style:BorderStyle.SINGLE, size:6, color:"000000" }; };
+  var borders = { top:mkB(), bottom:mkB(), left:mkB(), right:mkB(), insideHorizontal:mkB(), insideVertical:mkB() };
+  var cm = { top:50, bottom:50, left:90, right:90 };
+
+  function gnum(g){ var m=String(g||"").match(/\d+/); return m?parseInt(m[0]):0; }
+  function keyStage(g){ var n=gnum(g); return n>=7?"Key Stage 3":(n>=4?"Key Stage 2":"Key Stage 1"); }
+  function run(t,o){ o=o||{}; return new TextRun({ text:String(t==null?"":t), bold:!!o.bold, size:o.size||18, font:"Arial", color:o.color||"000000" }); }
+  function para(children,o){ o=o||{}; return new Paragraph({ children:Array.isArray(children)?children:[children], spacing:{ after:(o.after==null?20:o.after) }, alignment:o.align||AlignmentType.LEFT }); }
+  function lineParas(arr){
+    arr = (arr||[]).map(function(s){ return String(s==null?"":s).replace(/^[\u2022\-\*]\s*/,"").trim(); }).filter(Boolean);
+    return arr.map(function(t){ return para(run(t)); });
+  }
+  // grid cell: bold label, optional inline value, optional block of lines, spanning `span` columns
+  function cell(label, span, opt){
+    opt = opt || {};
+    var head = [ run(label, {bold:true}) ];
+    if (opt.inline != null && opt.inline !== "") head.push(run("  " + opt.inline));
+    var kids = [ para(head, { after:(opt.block && opt.block.length) ? 40 : 0 }) ];
+    if (opt.block && opt.block.length) lineParas(opt.block).forEach(function(p){ kids.push(p); });
+    return new TableCell({ children:kids, columnSpan:span, width:{ size:span*COL, type:WidthType.DXA }, borders:borders, margins:cm });
+  }
+  // full-width single-column cell (Assessment / Reflections table)
+  function fullCell(label, block, blankLines){
+    var kids = [ para(run(label, {bold:true}), { after:(block && block.length) ? 40 : 0 }) ];
+    if (block && block.length) lineParas(block).forEach(function(p){ kids.push(p); });
+    for (var i=0;i<(blankLines||0);i++) kids.push(para(run("")));
+    return new TableCell({ children:kids, width:{ size:TW, type:WidthType.DXA }, borders:borders, margins:cm });
+  }
+
+  var tl = plan.teaching || {};
+  function tlCell(){
+    var kids = [ para(run("Teaching and Learning", {bold:true}), { after:60 }) ];
+    function block(title, arr){
+      if (!(arr && arr.length)) return;
+      kids.push(para(run(title, {bold:true}), { after:10 }));
+      lineParas(arr).forEach(function(p){ kids.push(p); });
+      kids.push(para(run(""), { after:10 }));
+    }
+    block("Introduction", tl.introduction);
+    block("Explanation / Inquiry Exploration", tl.explanation);
+    block("Activity", tl.activity);
+    block("Conclusion", tl.conclusion);
+    return new TableCell({ children:kids, columnSpan:5, width:{ size:TW, type:WidthType.DXA }, borders:borders, margins:cm });
+  }
+
+  var loVal = (plan.outcomeCode ? plan.outcomeCode + ": " : "") + (plan.outcomeStmt || "");
+
+  var gridRows = [
+    new TableRow({ children:[
+      cell("Subject:", 2, { inline:plan.subject||"" }),
+      cell("Period:", 1, { inline:plan.lessonNo||"" }),
+      cell("Duration:", 1, { inline:(plan.duration?plan.duration+" min":"") }),
+      cell("Week:", 1, { inline:(plan.week!=null?String(plan.week):"") })
+    ]}),
+    new TableRow({ children:[ cell("Topic:", 5, { inline:plan.topic||"" }) ]}),
+    new TableRow({ children:[ cell("Strand:", 2, { inline:plan.strand||"" }), cell("Sub-Strand:", 3, { inline:plan.substrand||"" }) ]}),
+    new TableRow({ children:[ cell("Key Competencies:", 2, { block:plan.keyCompetencies }), cell("Process Skill:", 3, { block:plan.processSkill }) ]}),
+    new TableRow({ children:[ cell("Shared Values:", 5, { block:plan.sharedValues }) ]}),
+    new TableRow({ children:[ cell("Prior Knowledge:", 2, { block:plan.priorKnowledge }), cell("Resources/ Teaching Materials:", 3, { block:plan.resources }) ]}),
+    new TableRow({ children:[ cell("Learning Outcomes:", 2, { block:[loVal] }), cell("Indicators:", 3, { block:plan.indicators }) ]}),
+    new TableRow({ children:[ cell("Learning Intentions:", 5, { block:plan.learningIntentions }) ]}),
+    new TableRow({ children:[ cell("Success Criteria:", 5, { block:plan.successCriteria }) ]}),
+    new TableRow({ children:[ tlCell() ]})
+  ];
+
+  var assessRows = [
+    new TableRow({ children:[ fullCell("Assessment:", plan.assessment) ]}),
+    new TableRow({ children:[ fullCell("My Reflections on the Lesson:", null, 2) ]})
+  ];
+
+  var header = [
+    para(run("LESSON PLAN", { bold:true, size:24 }), { align:AlignmentType.CENTER, after:80 }),
+    para(run((plan.school || "School") + " / " + keyStage(plan.grade), { bold:true }), { after:10 }),
+    para(run((plan.grade || "") + (plan.week ? "  ·  Week " + plan.week : "")), { after:10 }),
+    para(run(plan.date || ""), { after:140 })
+  ];
+
+  var doc = new Document({
+    sections:[{
+      properties:{ page:{ margin:{ top:720, right:720, bottom:720, left:720 } } },
+      children: header.concat([
+        new Table({ width:{ size:TW, type:WidthType.DXA }, borders:borders, columnWidths:[COL,COL,COL,COL,TW-4*COL], rows:gridRows }),
+        para(run(""), { after:140 }),
+        new Table({ width:{ size:TW, type:WidthType.DXA }, borders:borders, rows:assessRows })
+      ])
     }]
   });
   return await Packer.toBlob(doc);
