@@ -838,6 +838,8 @@ body::before {
     <div class="stab" data-sub="H.PE">H.PE</div>
     <div class="stab" data-sub="Creative Arts">Creative Arts</div>
     <div class="stab" data-sub="Islam">Islam</div>
+    <div class="stab" data-sub="Quran">Quran</div>
+    <div class="stab" data-sub="Dhivehi">Dhivehi</div>
   </div>
   <div class="g4">
     <div class="field"><label>Grade</label><select id="f-grade"><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option selected>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option></select></div>
@@ -1252,12 +1254,21 @@ function populateWeeks() {
 function updateSyllabus() {
   var grade=document.getElementById("f-grade").value;
   var data=getSyl(grade,currentSub);
+  var hasSyl=data.length>0;
+  var ostmt=document.getElementById("f-outstmt");
+  if(ostmt){
+    if(hasSyl){ ostmt.readOnly=true; ostmt.style.background="#f5f5f5"; ostmt.style.color="#555"; ostmt.placeholder=""; }
+    else { ostmt.readOnly=false; ostmt.style.background="#fff"; ostmt.style.color="#000"; ostmt.value="";
+      ostmt.placeholder=isThaanaSubject(currentSub)
+        ? "(ޚިޔާރީ) ފިލާވަޅުގެ ލަނޑުދަނޑި ލިޔުއްވާ — ނުވަތަ ހުސްކޮށް ބަހައްޓަވާ، AI އިން ތާނައިން އުފައްދައިދޭނެ"
+        : "(optional) type the learning outcome, or leave blank for the AI to generate it"; }
+  }
   var strands=[];
   data.forEach(function(d){if(strands.indexOf(d.strand)<0)strands.push(d.strand);});
   var sel=document.getElementById("f-strand");
   sel.innerHTML=strands.length
     ?strands.map(function(s){return"<option value='"+s.replace(/'/g,"&#39;")+"'>"+s+"</option>";}).join("")
-    :"<option value=''>No data for this grade/subject</option>";
+    :"<option value=''>"+(hasSyl?"No data for this grade/subject":"— (no syllabus list — just enter a Topic)")+"</option>";
   updateSubstrand();
 }
 
@@ -1288,7 +1299,7 @@ function updateIndicators() {
   var data=getSyl(grade,currentSub).filter(function(d){return d.out_code===code;});
   if(data.length)document.getElementById("f-outstmt").value=data[0].out_stmt||"";
   var sel=document.getElementById("f-indicators");
-  if(!data.length){sel.innerHTML="<option disabled>No indicators</option>";return;}
+  if(!data.length){var anySyl=getSyl(grade,currentSub).length>0;sel.innerHTML="<option disabled>"+(anySyl?"No indicators":"No syllabus list — indicators optional for this subject")+"</option>";return;}
   sel.innerHTML=data.map(function(d){
     return"<option value='"+d.ind_code+"' data-text='"+d.indicator.replace(/'/g,"&#39;")+"'>"+d.ind_code+": "+d.indicator+"</option>";
   }).join("");
@@ -1312,6 +1323,43 @@ function renderSugTags() {
 }
 function addTag(el,t){el.classList.toggle("on");var ta=document.getElementById("f-activities");if(el.classList.contains("on"))ta.value=(ta.value?ta.value+"\n":"")+t;}
 
+// ── Thaana (Dhivehi-script) generation for Dhivehi, Islam and Quran ──
+function isThaanaSubject(sub){ return /^(Dhivehi|Islam|Quran)$/i.test((sub||"").trim()); }
+function thaanaDirective(sub, grade){
+  if(!isThaanaSubject(sub)) return "";
+  // 8 Key Competencies (މައިގަނޑު ޤާބިލިއްޔަތުތައް) — verbatim from the MNC Key Competency framework
+  var KC=[
+    "ދެމެހެއްޓެނިވި ތަރައްޤީއަށް ޢަމަލުކުރުން",
+    "ޓެކްނޮލޮޖީ އާއި މީޑިއާ ބޭނުންކުރުން",
+    "ދޭހަވުމާއި ދޭހަކޮށްދިނުން",
+    "ބިނާކުރަނިވި އަދި އުފެއްދުންތެރި ގޮތެއްގައި ވިސްނުން",
+    "އެހެން މީހުންނާ ގުޅިގެން އުޅުން",
+    "ދުޅަހެޔޮ ދިރިއުޅުމެއް އުޅުން",
+    "ނަފުސު ދެނެގަތުމާއި ތަންޒީމުކުރުން",
+    "އިސްލާމްދީނަށް ޢަމަލުކުރުން"
+  ];
+  var sv="ޙިއްޞާކުރާ އަގުތަކުގެ ތެރޭގައި: އިޙްތިރާމްކުރުން، ތެދުވެރިކަން، އަމާނާތްތެރިކަން، ޒިންމާދާރުވުން، އޯގާތެރިކަން، އެއްބައިވަންތަކަން، ޤައުމީ ލޯބި އަދި އިސްލާމީ ހެޔޮ އަޚްލާޤު ފަދަ ޤައުމީ މަންހަޖުގައި ބަޔާންކޮށްފައިވާ އަގުތައް ހިމެނެއެވެ. ފިލާވަޅާ ގުޅޭ އަގުތައް ޚިޔާރުކުރާށެވެ.";
+  var subTerm;
+  if(/Quran/i.test(sub)){
+    subTerm="މި ފިލާވަޅަކީ ކީރިތި ޤުރުއާނުގެ މާއްދާއެކެވެ. ޞައްޙަ އިޞްޠިލާޙުތައް ބޭނުންކުރާށެވެ: ސޫރަތް، އާޔަތް، ތަޖުވީދު، މަޚްރަޖު، ޞިފާތު، ތިލާވަތު، ހިތުދަސްކުރުން، ބަލައިގެން ކިޔެވުން، އަދި މާނަ ދޭހަކުރުން. ސޫރަތާއި އާޔަތްތަކަށް ޙަވާލާދޭއިރު ޢަރަބި ބަހުން ލިޔުން ހުއްދައެވެ.";
+  } else if(/Islam/i.test(sub)){
+    subTerm="މި ފިލާވަޅަކީ އިސްލާމް މާއްދާއެކެވެ. ދިވެހި މަދަރުސާތަކުގައި ޢާންމުކޮށް ބޭނުންކުރާ ޞައްޙަ އިސްލާމީ އިޞްޠިލާޙުތައް ބޭނުންކުރާށެވެ: ޢަޤީދާ، ފިޤްހު، ޢިބާދާތު، އަޚްލާޤު، ސީރަތު، ޙަދީޘް، ފަރުޟު އަދި ސުންނަތް ފަދަ.";
+  } else {
+    subTerm="މި ފިލާވަޅަކީ ދިވެހި މާއްދާއެކެވެ. ދިވެހި ބަހާއި އަދަބިއްޔާތުގެ ޞައްޙަ އިޞްޠިލާޙުތައް ބޭނުންކުރާށެވެ: ކިޔުމުގެ ދޭހަ، ލިޔުންތެރިކަން، އަކުރުތަކާއި ފިލިތައް، ނަޙޫ، ޞަރުފު އަދި އަދަބީ ވައްތަރުތައް ފަދަ.";
+  }
+  return "\n\n=== DHIVEHI / THAANA OUTPUT — REQUIRED (subject: "+sub+") ===\n"
+    +"CRITICAL: Write EVERY piece of educational content in the DHIVEHI language using THAANA script (ތާނަ). This covers the lesson title, learning outcomes, key competencies, shared values, success criteria, teaching & learning activities, teacher instructions, student activities, resources, assessment strategies, reflection, homework, and ANY description or explanation.\n"
+    +"- Do NOT use English or Latin letters for the content, and do NOT produce machine-translated or awkward phrasing. Write natural, fluent, professional Dhivehi as an experienced Maldivian teacher would.\n"
+    +"- Use correct Maldivian spelling and grammar, vocabulary appropriate for "+grade+", and Maldives National Curriculum (ޤައުމީ މަންހަޖު) terminology.\n"
+    +"- KEEP ALL JSON KEYS AND STRUCTURE EXACTLY AS GIVEN IN ENGLISH (e.g. learningIntentions, successCriteria, fields, sections, title, content); only the VALUES are written in Thaana. Any fixed English or transliterated labels already in an uploaded template must remain unchanged — fill only their values in Thaana.\n"
+    +"- Arabic script is permitted only for Qur'anic text, Surah/Ayah names and du'a where relevant.\n"
+    +subTerm+"\n"
+    +"މައިގަނޑު ޤާބިލިއްޔަތުތައް (ޤައުމީ މަންހަޖު): "+KC.join(" / ")+". މީގެ ތެރެއިން ފިލާވަޅާ ގުޅޭ ޤާބިލިއްޔަތުތައް ޚިޔާރުކޮށް ތާނައިން ލިޔާށެވެ.\n"
+    +sv+"\n"
+    +"Learning outcomes and indicators must align with the outcome/indicators selected above, expressed in Thaana.";
+}
+
+
 async function doGenerate() {
   var key=document.getElementById("api-key")?document.getElementById("api-key").value.trim():"";
   if(!key&&!serverHasKey){alert("Please enter your API key.");return;}
@@ -1333,7 +1381,8 @@ async function doGenerate() {
   var activityType=(document.getElementById("f-activity-type")||{}).value||"Standard";
   var inds=getSelectedIndicators();
   if(!topic){alert("Please enter a topic.");return;}
-  if(!inds.length){alert("Please select at least one indicator.");return;}
+  var subjHasSyllabus=(typeof getSyl==="function")?(getSyl(grade,currentSub).length>0):true;
+  if(!inds.length&&subjHasSyllabus){alert("Please select at least one indicator.");return;}
   var fname=buildFilename(currentSub,wk,ln);
   var btn=document.getElementById("gen-btn"); btn.disabled=true;
   setStatus("gen-status","loading","<span class='spin'></span> Generating...");
@@ -1457,6 +1506,9 @@ async function doGenerate() {
       +'}'
       ;
   }
+
+  // For Dhivehi, Islam and Quran, force all AI content into Thaana script (applies to every template/format path)
+  prompt += thaanaDirective(currentSub, grade);
 
   try {
     setProgress("gen-prog","gen-bar",50);
@@ -2819,7 +2871,7 @@ async function buildDocxFromTemplate(plan, template) {
   function P(text, opts){
     opts = opts || {};
     return new Paragraph({
-      children:[ new TextRun({ text:String(text==null?"":text), bold:!!opts.bold, size:opts.size||20, font:opts.font||"Arial", color:opts.color||"000000" }) ],
+      children:[ (function(){ var _s=String(text==null?"":text); var _th=/[\u0780-\u07BF]/.test(_s); return new TextRun({ text:_s, bold:!!opts.bold, size:opts.size||20, font:_th?"Faruma":(opts.font||"Arial"), color:opts.color||"000000", rightToLeft:_th }); })() ],
       spacing:{ after: opts.spaceAfter==null ? 60 : opts.spaceAfter },
       alignment: opts.align || AlignmentType.LEFT
     });
@@ -2933,7 +2985,7 @@ async function buildSchoolDocx(plan) {
 
   function gnum(g){ var m=String(g||"").match(/\d+/); return m?parseInt(m[0]):0; }
   function keyStage(g){ var n=gnum(g); return n>=7?"Key Stage 3":(n>=4?"Key Stage 2":"Key Stage 1"); }
-  function run(t,o){ o=o||{}; return new TextRun({ text:String(t==null?"":t), bold:!!o.bold, size:o.size||18, font:"Arial", color:o.color||"000000" }); }
+  function run(t,o){ o=o||{}; var _s=String(t==null?"":t); var _th=/[\u0780-\u07BF]/.test(_s); return new TextRun({ text:_s, bold:!!o.bold, size:o.size||18, font:_th?"Faruma":"Arial", color:o.color||"000000", rightToLeft:_th }); }
   function para(children,o){ o=o||{}; return new Paragraph({ children:Array.isArray(children)?children:[children], spacing:{ after:(o.after==null?20:o.after) }, alignment:o.align||AlignmentType.LEFT }); }
   function lineParas(arr){
     arr = (arr||[]).map(function(s){ return String(s==null?"":s).replace(/^[\u2022\-\*]\s*/,"").trim(); }).filter(Boolean);
@@ -3033,7 +3085,7 @@ async function buildDocx(p) {
   var cm={top:100,bottom:100,left:100,right:100};
   var sh=function(f){return{fill:f,type:ShadingType.CLEAR,color:"auto"};};
   var GREY="999999",WHITE="FFFFFF";
-  var R=function(t,o){o=o||{};return new TextRun({text:String(t||""),font:o.font||"Cambria",size:o.size||20,bold:!!o.bold,color:o.color||"000000"});};
+  var R=function(t,o){o=o||{};var _s=String(t||"");var _th=/[\u0780-\u07BF]/.test(_s);return new TextRun({text:_s,font:_th?"Faruma":(o.font||"Cambria"),size:o.size||20,bold:!!o.bold,color:o.color||"000000",rightToLeft:_th});};
   var Pr=function(r,o){o=o||{};return new Paragraph({alignment:o.align||AlignmentType.LEFT,spacing:{line:240,lineRule:"auto"},numbering:o.num,children:Array.isArray(r)?r:[r]});};
   var BP=function(t,o){o=o||{};return Pr(R(t,Object.assign({bold:true},o)),o);};
   var TP=function(t,o){return Pr(R(t||"",o||{}),o||{});};
