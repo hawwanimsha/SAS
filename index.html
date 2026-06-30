@@ -1153,13 +1153,49 @@ function setStatus(id,type,html) { var el=document.getElementById(id); el.classN
 function setProgress(pId,bId,pct) { document.getElementById(pId).style.display="block"; document.getElementById(bId).style.width=pct+"%"; }
 function buildFilename(sub,wk,ln) { var abbr={"Mathematics":"Maths","English":"English","Science":"Science","Social Studies":"SocSt","H.PE":"HPE","Creative Arts":"Arts"}[sub]||sub; return abbr+"_WK"+(wk||"?")+"_"+(ln||"1"); }
 
+// Tolerant JSON parser — recovers from responses truncated at max_tokens
+// (e.g. "Unterminated string in JSON") by repairing open strings/brackets.
+function repairJson(t){
+  var s=String(t||"");
+  var inStr=false,esc=false,stack=[];
+  for(var i=0;i<s.length;i++){
+    var c=s[i];
+    if(esc){esc=false;continue;}
+    if(c==="\\"){esc=true;continue;}
+    if(c==='"'){inStr=!inStr;continue;}
+    if(inStr)continue;
+    if(c==="{"||c==="[")stack.push(c);
+    else if(c==="}"||c==="]")stack.pop();
+  }
+  var out=s;
+  if(esc)out=out.slice(0,-1);            // drop a dangling backslash
+  if(inStr)out+='"';                     // close an unterminated string
+  out=out.replace(/\s+$/,"");
+  out=out.replace(/,\s*$/,"");            // trailing comma
+  out=out.replace(/,\s*"[^"]*"\s*$/,""); // dangling partial key (no colon/value)
+  out=out.replace(/(\{)\s*"[^"]*"\s*$/,"$1"); // object opened then partial key
+  out=out.replace(/:\s*$/,":null");      // key with colon but no value
+  out=out.replace(/,\s*$/,"");
+  for(var j=stack.length-1;j>=0;j--){ out+=(stack[j]==="{"?"}":"]"); }
+  return out;
+}
+function safeJsonParse(text){
+  var t=String(text||"").trim();
+  t=t.replace(/^```(?:json)?\s*/i,"").replace(/\s*```$/,"").trim();
+  var s=t.search(/[\{\[]/); if(s>0)t=t.slice(s); // skip any prose before the JSON
+  try{ return JSON.parse(t); }catch(e){}
+  try{ return JSON.parse(repairJson(t)); }catch(e2){
+    throw new Error("The AI response was cut off before finishing. Please tap Generate again — if it keeps happening, shorten the topic or pick fewer indicators.");
+  }
+}
+
 async function callAPI(key,prompt,maxTokens) {
   var resp;
   try {
     resp = await fetch("/api/messages",{
       method:"POST",
       headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},
-      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:maxTokens||2000,messages:[{role:"user",content:prompt}]})
+      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:maxTokens||4000,messages:[{role:"user",content:prompt}]})
     });
   } catch(fetchErr) {
     throw new Error("Network error — make sure the app is running on Railway (not opened as a local file). Details: " + fetchErr.message);
@@ -1169,7 +1205,7 @@ async function callAPI(key,prompt,maxTokens) {
   if(!data.content) throw new Error("Unexpected response from API (status " + resp.status + "): " + JSON.stringify(data).slice(0,200));
   var text = data.content.map(function(b){return b.text||"";}).join("").trim();
   text = text.replace(/^```json\s*/,"").replace(/\s*```$/,"").trim();
-  return JSON.parse(text);
+  return safeJsonParse(text);
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -1512,7 +1548,7 @@ async function doGenerate() {
 
   try {
     setProgress("gen-prog","gen-bar",50);
-    var plan=await callAPI(key,prompt, hasTemplate ? 4000 : 3000);
+    var plan=await callAPI(key,prompt, hasTemplate ? 8000 : 6000);
     plan.subject=currentSub; plan.grade=grade; plan.duration=dur;
     plan.week=wk; plan.lessonNo=fname; plan.date=date;
     plan.strand=strand; plan.substrand=substrand; plan.outcomeCode=outCode;
@@ -2418,7 +2454,7 @@ async function callAPI(key, prompt, maxTokens) {
       headers: headers,
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: maxTokens || 2000,
+        max_tokens: maxTokens || 4000,
         messages: [{ role: 'user', content: prompt }]
       })
     });
@@ -2430,7 +2466,7 @@ async function callAPI(key, prompt, maxTokens) {
   if (!data.content) throw new Error('Unexpected API response (status ' + resp.status + ')');
   var text = data.content.map(function(b) { return b.text || ''; }).join('').trim();
   text = text.replace(/^```json\s*/,'').replace(/\s*```$/,'').trim();
-  return JSON.parse(text);
+  return safeJsonParse(text);
 }
 
 // =====================================================================
