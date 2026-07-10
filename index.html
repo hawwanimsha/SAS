@@ -878,21 +878,19 @@ body::before {
   </select></div>
   <div class="field"><label>Topic / Lesson Title</label><input type="text" id="f-topic" placeholder="e.g. Adding fractions with unlike denominators"></div>
   <div class="field"><label>Indicators (hold Ctrl/Cmd for multiple)</label><select id="f-indicators" multiple style="height:110px;width:100%;border:1.5px solid #dde2e8;border-radius:7px;padding:5px;font-size:12px;font-family:inherit;"><option disabled>Select Outcome Code above</option></select></div>
-  <div class="field"><label>Activity Ideas</label><div class="sug-wrap" id="sug-wrap"></div><textarea id="f-activities" rows="3" placeholder="Add ideas, or paste an image here..."></textarea>
+  <div class="field"><label>Activity Ideas</label><div class="sug-wrap" id="sug-wrap"></div><textarea id="f-activities" rows="3" placeholder="Add ideas or leave blank..."></textarea>
     <div style="margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
       <label style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#0f4c5c;border:1px solid #cfe0e2;background:#f4fbfb;padding:7px 12px;border-radius:9px">
-        <span>&#128206;</span> Add image, PDF or Word
-        <input type="file" id="f-activity-image" accept="image/*,application/pdf,.pdf,.doc,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="display:none" onchange="onActivityFile(this)">
+        <span>&#128247;</span> Add image
+        <input type="file" id="f-activity-image" accept="image/*" style="display:none" onchange="onActivityImage(this)">
       </label>
-      <span style="font-size:12px;color:#8a978f">or paste an image (Ctrl/Cmd+V) into the box above</span>
       <div id="act-img-preview" style="display:none;align-items:center;gap:8px">
-        <img id="act-img-thumb" alt="" style="height:44px;width:44px;object-fit:cover;border-radius:8px;border:1px solid #e2e8e6;display:none">
-        <span id="act-file-icon" style="display:none;height:44px;width:44px;align-items:center;justify-content:center;border-radius:8px;border:1px solid #e2e8e6;background:#f4fbfb;font-size:20px">&#128196;</span>
+        <img id="act-img-thumb" alt="" style="height:44px;width:44px;object-fit:cover;border-radius:8px;border:1px solid #e2e8e6">
         <span id="act-img-name" style="font-size:12px;color:#5b6b63;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
         <button type="button" onclick="clearActivityImage()" style="cursor:pointer;font-size:12px;color:#b4453a;background:#fff;border:1px solid #eccdc9;padding:6px 10px;border-radius:8px">Remove</button>
       </div>
     </div>
-    <div id="act-img-hint" style="margin-top:5px;font-size:12px;color:#3a8f5c;display:none">&#10003; The generated lesson plan will include an activity built around this attachment.</div>
+    <div id="act-img-hint" style="margin-top:5px;font-size:12px;color:#3a8f5c;display:none">&#10003; The generated lesson plan will include an activity built around this image.</div>
   </div>
   <button class="btn btn-navy" id="gen-btn" onclick="doGenerate()">&#9889; Generate Lesson Plan</button>
   <div class="prog" id="gen-prog"><div class="prog-bar" id="gen-bar" style="width:0%"></div></div>
@@ -1374,109 +1372,32 @@ function renderSugTags() {
 }
 function addTag(el,t){el.classList.toggle("on");var ta=document.getElementById("f-activities");if(el.classList.contains("on"))ta.value=(ta.value?ta.value+"\n":"")+t;}
 
-// ── Activity Ideas attachment (image / PDF / Word, upload or paste) ──
-// activityAttachment = { kind:'image'|'pdf'|'text', media_type, data(base64), text, name, dataUrl }
-var activityAttachment = null;
-var activityImage = null; // kept for backward compatibility
-
-function fileToBase64(file){
-  return new Promise(function(res,rej){
-    var r=new FileReader();
-    r.onload=function(){ var u=String(r.result||''); var c=u.indexOf(','); res({dataUrl:u,base64:c>=0?u.slice(c+1):u}); };
-    r.onerror=function(){ rej(new Error('read failed')); };
-    r.readAsDataURL(file);
-  });
-}
-// Extract readable text from a .docx using JSZip (word/document.xml)
-async function docxToText(file){
-  if(typeof JSZip==='undefined') throw new Error('Word reader not ready');
-  var buf=await file.arrayBuffer();
-  var zip=await JSZip.loadAsync(buf);
-  var f=zip.file('word/document.xml');
-  if(!f) throw new Error('Not a valid Word document');
-  var xml=await f.async('string');
-  xml=xml.replace(/<\/w:p>/g,'\n').replace(/<w:tab[^>]*>/g,'\t');
-  var txt=xml.replace(/<[^>]+>/g,'');
-  txt=txt.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'");
-  return txt.replace(/\n{3,}/g,'\n\n').trim();
-}
-async function onActivityFile(input){
+// ── Activity Ideas image attachment ──
+var activityImage = null; // { media_type, data (base64), name, dataUrl }
+function onActivityImage(input){
   var f = input && input.files && input.files[0];
   if(!f){ return; }
-  var name=f.name||'', type=f.type||'', low=name.toLowerCase();
-  try{
-    if(/^image\//.test(type)){
-      if(f.size>5*1024*1024){ alert('That image is larger than 5 MB. Please choose a smaller one.'); input.value=''; return; }
-      var im=await fileToBase64(f);
-      activityAttachment={kind:'image',media_type:type,data:im.base64,name:name,dataUrl:im.dataUrl};
-    } else if(type==='application/pdf' || /\.pdf$/.test(low)){
-      if(f.size>20*1024*1024){ alert('That PDF is larger than 20 MB. Please choose a smaller one.'); input.value=''; return; }
-      var pf=await fileToBase64(f);
-      activityAttachment={kind:'pdf',media_type:'application/pdf',data:pf.base64,name:name};
-    } else if(/\.docx$/.test(low) || type.indexOf('officedocument.wordprocessingml')>=0){
-      var text=await docxToText(f);
-      if(!text){ alert('Could not read any text from that Word file.'); input.value=''; return; }
-      activityAttachment={kind:'text',text:text,name:name};
-    } else if(/\.doc$/.test(low) || type==='application/msword'){
-      alert('Old .doc files are not supported — please save it as .docx or PDF and try again.'); input.value=''; return;
-    } else {
-      alert('Unsupported file. Please add an image, a PDF, or a Word (.docx) file.'); input.value=''; return;
-    }
-    activityImage = (activityAttachment.kind==='image') ? activityAttachment : null;
-    renderAttachment();
-  }catch(e){ alert('Could not read that file: '+(e.message||e)); input.value=''; }
-}
-function handlePastedImage(blob){
-  if(blob.size>5*1024*1024){ alert('That pasted image is larger than 5 MB.'); return; }
-  fileToBase64(blob).then(function(im){
-    activityAttachment={kind:'image',media_type:blob.type||'image/png',data:im.base64,name:'Pasted image',dataUrl:im.dataUrl};
-    activityImage=activityAttachment;
-    renderAttachment();
-    if(typeof toast==='function') toast('Image pasted — it will be used in the lesson plan.');
-  }).catch(function(){ alert('Could not read the pasted image.'); });
-}
-function renderAttachment(){
-  var a=activityAttachment;
-  var thumb=document.getElementById('act-img-thumb');
-  var icon=document.getElementById('act-file-icon');
-  var nm=document.getElementById('act-img-name');
-  var pv=document.getElementById('act-img-preview');
-  var hint=document.getElementById('act-img-hint');
-  if(!a){ if(pv)pv.style.display='none'; if(hint)hint.style.display='none'; return; }
-  if(a.kind==='image'){
-    if(thumb){ thumb.src=a.dataUrl; thumb.style.display='block'; }
-    if(icon) icon.style.display='none';
-  } else {
-    if(thumb) thumb.style.display='none';
-    if(icon){ icon.style.display='inline-flex'; icon.textContent=(a.kind==='pdf'?'\uD83D\uDCC4':'\uD83D\uDCDD'); }
-  }
-  if(nm) nm.textContent=a.name+(a.kind==='pdf'?'  (PDF)':a.kind==='text'?'  (Word)':'');
-  if(pv) pv.style.display='flex';
-  if(hint) hint.style.display='block';
+  if(!/^image\//.test(f.type)){ alert('Please choose an image file.'); input.value=''; return; }
+  if(f.size > 5*1024*1024){ alert('That image is larger than 5 MB. Please choose a smaller one.'); input.value=''; return; }
+  var reader = new FileReader();
+  reader.onload = function(){
+    var dataUrl = String(reader.result||'');
+    var comma = dataUrl.indexOf(',');
+    activityImage = { media_type: f.type, data: comma>=0?dataUrl.slice(comma+1):dataUrl, name: f.name, dataUrl: dataUrl };
+    var thumb=document.getElementById('act-img-thumb'); if(thumb) thumb.src=dataUrl;
+    var nm=document.getElementById('act-img-name'); if(nm) nm.textContent=f.name;
+    var pv=document.getElementById('act-img-preview'); if(pv) pv.style.display='flex';
+    var hint=document.getElementById('act-img-hint'); if(hint) hint.style.display='block';
+  };
+  reader.onerror=function(){ alert('Could not read that image. Please try another file.'); };
+  reader.readAsDataURL(f);
 }
 function clearActivityImage(){
-  activityAttachment=null; activityImage=null;
+  activityImage=null;
   var i=document.getElementById('f-activity-image'); if(i) i.value='';
-  renderAttachment();
+  var pv=document.getElementById('act-img-preview'); if(pv) pv.style.display='none';
+  var hint=document.getElementById('act-img-hint'); if(hint) hint.style.display='none';
 }
-// Enable pasting an image directly into the Activity Ideas box
-(function(){
-  function bind(){
-    var ta=document.getElementById('f-activities');
-    if(!ta || ta._pasteBound) return;
-    ta._pasteBound=true;
-    ta.addEventListener('paste',function(e){
-      var items=(e.clipboardData&&e.clipboardData.items)||[];
-      for(var i=0;i<items.length;i++){
-        if(items[i].type&&items[i].type.indexOf('image')===0){
-          var blob=items[i].getAsFile();
-          if(blob){ e.preventDefault(); handlePastedImage(blob); return; }
-        }
-      }
-    });
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
-})();
 
 // ── Thaana (Dhivehi-script) generation for Dhivehi, Islam and Quran ──
 function isThaanaSubject(sub){ return /^(Dhivehi|Islam|Quran)$/i.test((sub||"").trim()); }
@@ -1665,19 +1586,14 @@ async function doGenerate() {
   // For Dhivehi, Islam and Quran, force all AI content into Thaana script (applies to every template/format path)
   prompt += thaanaDirective(currentSub, grade);
 
-  // If the teacher attached material (image / PDF / Word) to Activity Ideas, tell the model to design an activity around it
-  var _att = activityAttachment;
-  if (_att) {
-    if (_att.kind === 'text' && _att.text) {
-      prompt += "\n\nATTACHED WORD DOCUMENT (\"" + _att.name + "\") — its content is below; use it as the basis for a teaching activity:\n\"\"\"\n" + String(_att.text).slice(0, 6000) + "\n\"\"\"";
-    }
-    var what = _att.kind === 'image' ? 'an image' : _att.kind === 'pdf' ? 'a PDF document (attached with this message)' : 'a Word document (content shown above)';
-    prompt += "\n\nATTACHED MATERIAL: The teacher attached " + what + " as an activity idea. Design at least one concrete teaching & learning activity that directly uses this material — describe exactly what pupils do with it (observe, read, discuss, label, sort, compare, answer questions on it, write about it, role-play, etc.), refer to what it actually contains, weave it into the main body of the lesson, and keep it appropriate for the grade and subject." + (isThaanaSubject(currentSub) ? " Write this activity in Thaana like the rest of the content." : "");
+  // If the teacher attached an image to Activity Ideas, tell the model to design an activity around it
+  if (activityImage && activityImage.data) {
+    prompt += "\n\nATTACHED IMAGE: The teacher has attached an image (shown with this message) as an activity idea. Design at least one concrete teaching & learning activity that directly uses THIS image — describe what pupils do with it (observe, discuss, label, sort, compare, write about, role-play, answer questions on it, etc.). Refer to what is actually visible in the image, weave it into the main body of the lesson, and keep it appropriate for the grade and subject." + (isThaanaSubject(currentSub) ? " Write this activity in Thaana like the rest of the content." : "");
   }
 
   try {
     setProgress("gen-prog","gen-bar",50);
-    var plan=await callAPI(key,prompt, hasTemplate ? 8000 : 6000, activityAttachment);
+    var plan=await callAPI(key,prompt, hasTemplate ? 8000 : 6000, activityImage);
     plan.subject=currentSub; plan.grade=grade; plan.duration=dur;
     plan.week=wk; plan.lessonNo=fname; plan.date=date;
     plan.strand=strand; plan.substrand=substrand; plan.outcomeCode=outCode;
@@ -2566,7 +2482,7 @@ function renderSavedTemplates() {
 // =====================================================================
 // OVERRIDE callAPI to use server key transparently
 // =====================================================================
-async function callAPI(key, prompt, maxTokens, attachment) {
+async function callAPI(key, prompt, maxTokens, image) {
   // Explore-first: only require login at the point of generating/saving.
   if (!currentUser) { if (typeof openAuth === 'function') openAuth('login'); throw new Error('Please log in to generate. Your inputs are kept — just log in and try again.'); }
   var headers = { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' };
@@ -2577,13 +2493,9 @@ async function callAPI(key, prompt, maxTokens, attachment) {
   if (!serverHasKey && key) headers['x-api-key'] = key;
 
   var resp;
-  var _blocks = [];
-  if (attachment && attachment.kind === 'image' && attachment.data) {
-    _blocks.push({ type:'image', source:{ type:'base64', media_type:attachment.media_type||'image/png', data:attachment.data } });
-  } else if (attachment && attachment.kind === 'pdf' && attachment.data) {
-    _blocks.push({ type:'document', source:{ type:'base64', media_type:'application/pdf', data:attachment.data } });
-  }
-  var userContent = _blocks.length ? _blocks.concat([{ type:'text', text:prompt }]) : prompt;
+  var userContent = (image && image.data)
+    ? [ { type:'image', source:{ type:'base64', media_type:image.media_type||'image/png', data:image.data } }, { type:'text', text:prompt } ]
+    : prompt;
   try {
     resp = await fetch('/api/messages', {
       method: 'POST',
